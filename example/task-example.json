@@ -1,0 +1,39 @@
+{
+    "version": 1,
+    "schedule": {
+        "type": "simple",
+        "interval": "1s"
+    },
+    "workflow": {
+        "collect": {
+            "metrics": {
+                "/libvirt/irild016.cslf1.intel.com/fedora22/cpu/cputime": {},
+                "/libvirt/irild016.cslf1.intel.com/fedora22/mem/available": {},
+                "/libvirt/irild016.cslf1.intel.com/fedora22/mem/rss": {},
+                "/libvirt/irild016.cslf1.intel.com/fedora22/mem/max": {}
+            },
+            "config": {
+                "/intel/dummy": {
+                    "user": "root",
+                    "password": "secret"
+                }
+            },
+            "process": [
+                {
+                    "plugin_name": "passthru",
+                    "plugin_version": 1,
+                    "process": null,
+                    "publish": [
+                        {
+                            "plugin_name": "file",
+                            "plugin_version": 1,
+                            "config": {
+                                "file": "/tmp/published"
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}
