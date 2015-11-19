@@ -16,7 +16,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
-[![Build Status](https://magnum.travis-ci.com/intelsdi-x/pulse.svg?token=2ujsxEpZo1issFyVWX29&branch=master)](https://magnum.travis-ci.com/intelsdi-x/pulse-plugin-collector-libvirt )
+[![Build Status](https://magnum.travis-ci.com/intelsdi-x/pulse-plugin-collector-libvirt.svg?token=2ujsxEpZo1issFyVWX29&branch=master)](https://magnum.travis-ci.com/intelsdi-x/pulse-plugin-collector-libvirt )
 # Plugin - Pulse Libvirt Collector
 
 1. [Getting Started](#getting-started)
