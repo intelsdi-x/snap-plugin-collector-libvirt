@@ -97,6 +97,6 @@ if [[ $TEST_SUITE == "unit" ]]; then
 	#     done
 	# fi
 elif [[ $TEST_SUITE == "integration"  ]]; then
-    cd $PULSE_PLUGIN_SOURCE
+    cd $SNAP_PLUGIN_SOURCE
     go test -v --tags=integration ./...
 fi

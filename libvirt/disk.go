@@ -26,7 +26,7 @@ import (
 	"time"
 
 	"github.com/beevik/etree"
-	"github.com/intelsdi-x/pulse/control/plugin"
+	"github.com/intelsdi-x/snap/control/plugin"
 	"github.com/sandlbn/libvirt-go"
 )
 
