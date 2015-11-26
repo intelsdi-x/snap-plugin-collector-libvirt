@@ -51,13 +51,13 @@ make
 
 ### Examples
 
-By default plugin is using qemu:///system uri. To monitor external
-system, you can pass uri parameter to the snapd deamon configuration.
-Example configuration file can be find in example directory.
+By default the plugin is using qemu:///system uri. To monitor external
+systems, you can pass the uri parameter to the snapd deamon configuration.
+An example configuration file can be found in example directory.
 
 
 ### Exposed metrics
-Using libvirt plugin you can collect following metrics from libvirt domain
+Using the libvirt plugin you can collect the following metrics from the libvirt domain
 
 *  /libvirt/disk/{device_name}/wrreq - Write Requests
 *  /libvirt/disk/{device_name}/rdreq - Read Requests
@@ -81,7 +81,7 @@ Using libvirt plugin you can collect following metrics from libvirt domain
 *  /libvirt/net/{interface_name}/txerrs - Errors on transmit
 *  /libvirt/net/{interface_name}/txdrop - Drops on transmit
 
-**_IMPORTANT_**: not every hypervisor is exposing all listed metrics. Please check
+**_IMPORTANT_**: not all hypervisors expose all these metrics. Please check
 your hypervisor or libvirt documentation.
 
 ### Community Support
@@ -89,8 +89,7 @@ This repository is one of **many** plugins in the **snap framework**: a powerful
 The full project is at https://github.com/intelsdi-x/snap.
 
 ### Roadmap
-As we launch this plugin, we has a few items in mind for the next release:
-* Support for new io metrics added in libvirt 1.2.17
+As we launch this plugin, we do not have any outstanding requirements for the next release. If you have a feature request, please add it as an [issue](https://github.com/intelsdi-x/snap-plugin-collector-libvirt/issues).
 
 ## Contributing
 We love contributions! :heart_eyes:
