@@ -24,9 +24,9 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/intelsdi-x/pulse/control/plugin"
-	"github.com/intelsdi-x/pulse/control/plugin/cpolicy"
-	"github.com/intelsdi-x/pulse/core/ctypes"
+	"github.com/intelsdi-x/snap/control/plugin"
+	"github.com/intelsdi-x/snap/control/plugin/cpolicy"
+	"github.com/intelsdi-x/snap/core/ctypes"
 	"github.com/sandlbn/libvirt-go"
 )
 
@@ -40,7 +40,7 @@ const (
 )
 
 func Meta() *plugin.PluginMeta {
-	return plugin.NewPluginMeta(Name, Version, Type, []string{plugin.PulseGOBContentType}, []string{plugin.PulseGOBContentType})
+	return plugin.NewPluginMeta(Name, Version, Type, []string{plugin.SnapGOBContentType}, []string{plugin.SnapGOBContentType})
 }
 
 type Libvirt struct {

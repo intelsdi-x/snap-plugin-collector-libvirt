@@ -1,5 +1,4 @@
-# Plugin - Pulse Libvirt Collector
-TODO DESCRIPTION - A plugin to push awesome data from here to there
+# Plugin - snap libvirt collector
 
 1. [Contributing Code](#contributing-code)
 1. [Contributing Examples](#contributing-examples)
@@ -36,11 +35,11 @@ Once you're ready to contribute code back to this repo, start with these steps:
 ## Contributing Examples
 The most immediately helpful way you can benefit this project is by cloning the repository, adding some further examples and submitting a pull request.
 
-Have you written a blog post about how you use Pulse plugin collector libvirt ? Send it to us!
+Have you written a blog post about how you use snap plugin collector libvirt ? Send it to us!
 
 
 ## Contribute Elsewhere
-This repository is one of **many** plugins in the **Pulse Framework**: a powerful telemetry agent framework. See the full project at http://github.com/intelsdi-x/pulse
+This repository is one of **many** plugins in the **snap framework**: a powerful telemetry agent framework. See the full project at http://github.com/intelsdi-x/snap
 
 ## Thank You
 And **thank you!** Your contribution is incredibly important to us.

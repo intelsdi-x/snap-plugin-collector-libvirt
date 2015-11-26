@@ -1,5 +1,5 @@
 {
-	"ImportPath": "github.com/intelsdi-x/pulse-plugin-collector-libvirt",
+	"ImportPath": "github.com/intelsdi-x/snap-plugin-collector-libvirt",
 	"GoVersion": "go1.5.1",
 	"Packages": [
 		"."
@@ -15,9 +15,9 @@
 			"Rev": "c41fbb0640f67e4fa19a915141fcae36d9226460"
 		},
 		{
-			"ImportPath": "github.com/intelsdi-x/pulse",
-			"Comment": "v0.8.0-beta-51-gc768445",
-			"Rev": "c7684456136ecbb52d042d9f2f71865b350dc598"
+			"ImportPath": "github.com/intelsdi-x/snap",
+			"Comment": "pulse2snap",
+			"Rev": "0c65a1359589a71aded24150402627210efb70d2"
 		},
 		{
 			"ImportPath": "github.com/jtolds/gls",

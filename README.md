@@ -16,8 +16,8 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
-[![Build Status](https://magnum.travis-ci.com/intelsdi-x/pulse-plugin-collector-libvirt.svg?token=2ujsxEpZo1issFyVWX29&branch=master)](https://magnum.travis-ci.com/intelsdi-x/pulse-plugin-collector-libvirt )
-# Plugin - Pulse Libvirt Collector
+[![Build Status](https://api.travis-ci.com/intelsdi-x/snap-plugin-collector-libvirt.svg?token=FhmCtm9AdqhSXoSbqxo2&branch=master)](https://travis-ci.com/intelsdi-x/snap-plugin-collector-libvirt )
+# Plugin - snap libvirt collector
 
 1. [Getting Started](#getting-started)
 2. [Documentation](#documentation)
@@ -52,7 +52,7 @@ make
 ### Examples
 
 By default plugin is using qemu:///system uri. To monitor external
-system, you can pass uri parameter to the pulsed deamon configuration.
+system, you can pass uri parameter to the snapd deamon configuration.
 Example configuration file can be find in example directory.
 
 
@@ -85,8 +85,8 @@ Using libvirt plugin you can collect following metrics from libvirt domain
 your hypervisor or libvirt documentation.
 
 ### Community Support
-This repository is one of **many** plugins in the **Pulse Framework**: a powerful telemetry agent framework.
-The full project is at https://github.com/intelsdi-x/pulse.
+This repository is one of **many** plugins in the **snap framework**: a powerful telemetry agent framework.
+The full project is at https://github.com/intelsdi-x/snap.
 
 ### Roadmap
 As we launch this plugin, we has a few items in mind for the next release:
