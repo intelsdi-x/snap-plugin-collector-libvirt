@@ -1,4 +1,4 @@
-[![Build Status](https://api.travis-ci.com/intelsdi-x/snap-plugin-collector-libvirt.svg?token=FhmCtm9AdqhSXoSbqxo2&branch=master)](https://travis-ci.com/intelsdi-x/snap-plugin-collector-libvirt )
+[![Build Status](https://api.travis-ci.org/intelsdi-x/snap-plugin-collector-libvirt.svg)](https://travis-ci.org/intelsdi-x/snap-plugin-collector-libvirt )
 # snap collector plugin - libvirt
 
 1. [Getting Started](#getting-started)
