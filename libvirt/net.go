@@ -30,132 +30,132 @@ import (
 	"github.com/sandlbn/libvirt-go"
 )
 
-var net_metrics_types = []string{"rxbytes", "rxpackets", "rxerrs", "rxdrop",
+var netMetricsTypes = []string{"rxbytes", "rxpackets", "rxerrs", "rxdrop",
 	"txbytes", "txpackets", "txerrs", "txdrop"}
 
 func interfaceStat(ns []string, dom libvirt.VirDomain) (*plugin.PluginMetricType, error) {
 	switch {
 	case regexp.MustCompile(`^/libvirt/.*/.*/net/.*/rxbytes`).MatchString(joinNamespace(ns)):
 		iface := ns[4]
-		iface_stat, err := dom.InterfaceStats(iface)
+		ifaceStat, err := dom.InterfaceStats(iface)
 		if err != nil {
-			fmt.Println(err)
+			return nil, err
 		}
 		return &plugin.PluginMetricType{
 			Namespace_: ns,
-			Data_:      strconv.FormatInt(iface_stat.RxBytes, 10),
+			Data_:      strconv.FormatInt(ifaceStat.RxBytes, 10),
 			Timestamp_: time.Now(),
 		}, nil
 	case regexp.MustCompile(`^/libvirt/.*/.*/net/.*/rxpackets`).MatchString(joinNamespace(ns)):
 		iface := ns[4]
-		iface_stat, err := dom.InterfaceStats(iface)
+		ifaceStat, err := dom.InterfaceStats(iface)
 		if err != nil {
-			fmt.Println(err)
+			return nil, err
 		}
 		return &plugin.PluginMetricType{
 			Namespace_: ns,
-			Data_:      iface_stat.RxPackets,
+			Data_:      ifaceStat.RxPackets,
 			Timestamp_: time.Now(),
 		}, nil
 	case regexp.MustCompile(`^/libvirt/.*/.*/net/.*/rxerrs`).MatchString(joinNamespace(ns)):
 		iface := ns[4]
-		iface_stat, err := dom.InterfaceStats(iface)
+		ifaceStat, err := dom.InterfaceStats(iface)
 		if err != nil {
-			fmt.Println(err)
+			return nil, err
 		}
 		return &plugin.PluginMetricType{
 			Namespace_: ns,
-			Data_:      iface_stat.RxErrs,
+			Data_:      ifaceStat.RxErrs,
 			Timestamp_: time.Now(),
 		}, nil
 	case regexp.MustCompile(`^/libvirt/.*/.*/net/.*/rxdrop`).MatchString(joinNamespace(ns)):
 		iface := ns[4]
-		iface_stat, err := dom.InterfaceStats(iface)
+		ifaceStat, err := dom.InterfaceStats(iface)
 		if err != nil {
-			fmt.Println(err)
+			return nil, err
 		}
 		return &plugin.PluginMetricType{
 			Namespace_: ns,
-			Data_:      iface_stat.RxDrop,
+			Data_:      ifaceStat.RxDrop,
 			Timestamp_: time.Now(),
 		}, nil
 	case regexp.MustCompile(`^/libvirt/.*/.*/net/.*/txbytes`).MatchString(joinNamespace(ns)):
 		iface := ns[4]
-		iface_stat, err := dom.InterfaceStats(iface)
+		ifaceStat, err := dom.InterfaceStats(iface)
 		if err != nil {
-			fmt.Println(err)
+			return nil, err
 		}
 		return &plugin.PluginMetricType{
 			Namespace_: ns,
-			Data_:      strconv.FormatInt(iface_stat.TxBytes, 10),
+			Data_:      strconv.FormatInt(ifaceStat.TxBytes, 10),
 			Timestamp_: time.Now(),
 		}, nil
 	case regexp.MustCompile(`^/libvirt/.*/.*/net/.*/txpackets`).MatchString(joinNamespace(ns)):
 		iface := ns[4]
-		iface_stat, err := dom.InterfaceStats(iface)
+		ifaceStat, err := dom.InterfaceStats(iface)
 		if err != nil {
-			fmt.Println(err)
+			return nil, err
 		}
 		return &plugin.PluginMetricType{
 			Namespace_: ns,
-			Data_:      iface_stat.TxPackets,
+			Data_:      ifaceStat.TxPackets,
 			Timestamp_: time.Now(),
 		}, nil
 	case regexp.MustCompile(`^/libvirt/.*/.*/net/.*/txerrs`).MatchString(joinNamespace(ns)):
 		iface := ns[4]
-		iface_stat, err := dom.InterfaceStats(iface)
+		ifaceStat, err := dom.InterfaceStats(iface)
 		if err != nil {
 			fmt.Println(err)
 		}
 		return &plugin.PluginMetricType{
 			Namespace_: ns,
-			Data_:      iface_stat.TxErrs,
+			Data_:      ifaceStat.TxErrs,
 			Timestamp_: time.Now(),
 		}, nil
 	case regexp.MustCompile(`^/libvirt/.*/.*/net/.*/txdrop`).MatchString(joinNamespace(ns)):
 		iface := ns[4]
-		iface_stat, err := dom.InterfaceStats(iface)
+		ifaceStat, err := dom.InterfaceStats(iface)
 		if err != nil {
-			fmt.Println(err)
+			return nil, err
 		}
 		return &plugin.PluginMetricType{
 			Namespace_: ns,
-			Data_:      iface_stat.RxDrop,
+			Data_:      ifaceStat.RxDrop,
 			Timestamp_: time.Now(),
 		}, nil
 	}
 	return nil, fmt.Errorf("Unknown error processing %v", ns)
 }
 
-func listInterfaces(domXml *etree.Document) []string {
-	network_interfaces := []string{}
-	for _, t := range domXml.FindElements("//domain/devices/interface/target") {
+func listInterfaces(domXML *etree.Document) []string {
+	networkInterfaces := []string{}
+	for _, t := range domXML.FindElements("//domain/devices/interface/target") {
 		for _, i := range t.Attr {
-			network_interfaces = append(network_interfaces, i.Value)
+			networkInterfaces = append(networkInterfaces, i.Value)
 		}
 
 	}
-	return network_interfaces
+	return networkInterfaces
 }
 
 func getNetMetricTypes(dom libvirt.VirDomain, hostname string) ([]plugin.PluginMetricType, error) {
-	mts := make([]plugin.PluginMetricType, 0)
-	domXmlDesc, err := dom.GetXMLDesc(0)
+	var mts []plugin.PluginMetricType
+	domXMLDesc, err := dom.GetXMLDesc(0)
 	if err != nil {
 		return nil, err
 	}
-	domXml := etree.NewDocument()
-	domXml.ReadFromString(domXmlDesc)
+	domXML := etree.NewDocument()
+	domXML.ReadFromString(domXMLDesc)
 
 	domainname, err := dom.GetName()
 	if err != nil {
 		return nil, err
 	}
 
-	for _, metric := range net_metrics_types {
+	for _, metric := range netMetricsTypes {
 
-		for _, net_interface := range listInterfaces(domXml) {
-			mts = append(mts, plugin.PluginMetricType{Namespace_: []string{"libvirt", hostname, domainname, "net", net_interface, metric}})
+		for _, netInteface := range listInterfaces(domXML) {
+			mts = append(mts, plugin.PluginMetricType{Namespace_: []string{"libvirt", hostname, domainname, "net", netInteface, metric}})
 
 		}
 	}

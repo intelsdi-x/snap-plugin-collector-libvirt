@@ -87,114 +87,114 @@ func TestLibirtPlugin(t *testing.T) {
 
 	})
 	Convey("Get Hyervisor URI ", t, func() {
-		hypervisor_uri := make(map[string]ctypes.ConfigValue)
+		hypervisorURI := make(map[string]ctypes.ConfigValue)
 		Convey("So should return tcp+ssh://test", func() {
-			hypervisor_uri["uri"] = ctypes.ConfigValueStr{Value: "tcp+ssh://test"}
-			uri := getHypervisorUri(hypervisor_uri)
+			hypervisorURI["uri"] = ctypes.ConfigValueStr{Value: "tcp+ssh://test"}
+			uri := getHypervisorURI(hypervisorURI)
 			So("tcp+ssh://test", ShouldResemble, uri)
 		})
 		Convey("So should return empty string", func() {
-			uri := getHypervisorUri(hypervisor_uri)
+			uri := getHypervisorURI(hypervisorURI)
 			So(defaultURI, ShouldResemble, uri)
 		})
 
 	})
 	Convey("Get Metrics ", t, func() {
 		libvirtCol := NewLibvirtCollector()
-		cfg_node := cdata.NewNode()
-		cfg_node.AddItem("uri", ctypes.ConfigValueStr{Value: "test:///default"})
+		cfgNode := cdata.NewNode()
+		cfgNode.AddItem("uri", ctypes.ConfigValueStr{Value: "test:///default"})
 		var cfg = plugin.PluginConfigType{
-			ConfigDataNode: cfg_node,
+			ConfigDataNode: cfgNode,
 		}
-		Convey("So should return 14 types of metrics", func() {
+		Convey("So should return 38 types of metrics", func() {
 			metrics, err := libvirtCol.GetMetricTypes(cfg)
-			So(14, ShouldResemble, len(metrics))
+			So(38, ShouldResemble, len(metrics))
 			So(err, ShouldBeNil)
 		})
 		Convey("So should check namespace", func() {
 			metrics, err := libvirtCol.GetMetricTypes(cfg)
-			vcpu_namespace := joinNamespace(metrics[0].Namespace())
+			vcpuNamespace := joinNamespace(metrics[0].Namespace())
 			vcpu := regexp.MustCompile(`^/libvirt/.*/test/cpu/vcpu/0/cputime`)
-			So(true, ShouldEqual, vcpu.MatchString(vcpu_namespace))
+			So(true, ShouldEqual, vcpu.MatchString(vcpuNamespace))
 			So(err, ShouldBeNil)
 
-			vcpu_namespace_1 := joinNamespace(metrics[1].Namespace())
-			vcpu_1 := regexp.MustCompile(`^/libvirt/.*/test/cpu/vcpu/1/cputime`)
-			So(true, ShouldEqual, vcpu_1.MatchString(vcpu_namespace_1))
+			vcpuNamespace1 := joinNamespace(metrics[1].Namespace())
+			vcpu1 := regexp.MustCompile(`^/libvirt/.*/test/cpu/vcpu/1/cputime`)
+			So(true, ShouldEqual, vcpu1.MatchString(vcpuNamespace1))
 			So(err, ShouldBeNil)
 
-			cpu_namespace := joinNamespace(metrics[2].Namespace())
+			cpuNamespace := joinNamespace(metrics[2].Namespace())
 			cpu := regexp.MustCompile(`^/libvirt/.*/test/cpu/cputime`)
-			So(true, ShouldEqual, cpu.MatchString(cpu_namespace))
+			So(true, ShouldEqual, cpu.MatchString(cpuNamespace))
 			So(err, ShouldBeNil)
 
-			mem_namespace := joinNamespace(metrics[3].Namespace())
+			memNamespace := joinNamespace(metrics[3].Namespace())
 			mem := regexp.MustCompile(`^/libvirt/.*/test/mem/mem`)
-			So(true, ShouldEqual, mem.MatchString(mem_namespace))
+			So(true, ShouldEqual, mem.MatchString(memNamespace))
 			So(err, ShouldBeNil)
 
-			mem_namespace = joinNamespace(metrics[4].Namespace())
+			memNamespace = joinNamespace(metrics[4].Namespace())
 			mem = regexp.MustCompile(`^/libvirt/.*/test/mem/max`)
-			So(true, ShouldEqual, mem.MatchString(mem_namespace))
+			So(true, ShouldEqual, mem.MatchString(memNamespace))
 			So(err, ShouldBeNil)
 
-			mem_namespace = joinNamespace(metrics[5].Namespace())
+			memNamespace = joinNamespace(metrics[5].Namespace())
 			mem = regexp.MustCompile(`^/libvirt/.*/test/mem/swap_in`)
-			So(true, ShouldEqual, mem.MatchString(mem_namespace))
+			So(true, ShouldEqual, mem.MatchString(memNamespace))
 			So(err, ShouldBeNil)
 
-			mem_namespace = joinNamespace(metrics[6].Namespace())
+			memNamespace = joinNamespace(metrics[6].Namespace())
 			mem = regexp.MustCompile(`^/libvirt/.*/test/mem/swap_out`)
-			So(true, ShouldEqual, mem.MatchString(mem_namespace))
+			So(true, ShouldEqual, mem.MatchString(memNamespace))
 			So(err, ShouldBeNil)
 
-			mem_namespace = joinNamespace(metrics[7].Namespace())
+			memNamespace = joinNamespace(metrics[7].Namespace())
 			mem = regexp.MustCompile(`^/libvirt/.*/test/mem/major_fault`)
-			So(true, ShouldEqual, mem.MatchString(mem_namespace))
+			So(true, ShouldEqual, mem.MatchString(memNamespace))
 			So(err, ShouldBeNil)
 
-			mem_namespace = joinNamespace(metrics[8].Namespace())
+			memNamespace = joinNamespace(metrics[8].Namespace())
 			mem = regexp.MustCompile(`^/libvirt/.*/test/mem/min_fault`)
-			So(true, ShouldEqual, mem.MatchString(mem_namespace))
+			So(true, ShouldEqual, mem.MatchString(memNamespace))
 			So(err, ShouldBeNil)
 
-			mem_namespace = joinNamespace(metrics[9].Namespace())
+			memNamespace = joinNamespace(metrics[9].Namespace())
 			mem = regexp.MustCompile(`^/libvirt/.*/test/mem/unused`)
-			So(true, ShouldEqual, mem.MatchString(mem_namespace))
+			So(true, ShouldEqual, mem.MatchString(memNamespace))
 			So(err, ShouldBeNil)
 
-			mem_namespace = joinNamespace(metrics[10].Namespace())
+			memNamespace = joinNamespace(metrics[10].Namespace())
 			mem = regexp.MustCompile(`^/libvirt/.*/test/mem/available`)
-			So(true, ShouldEqual, mem.MatchString(mem_namespace))
+			So(true, ShouldEqual, mem.MatchString(memNamespace))
 			So(err, ShouldBeNil)
 
-			mem_namespace = joinNamespace(metrics[11].Namespace())
+			memNamespace = joinNamespace(metrics[11].Namespace())
 			mem = regexp.MustCompile(`^/libvirt/.*/test/mem/actual_balloon`)
-			So(true, ShouldEqual, mem.MatchString(mem_namespace))
+			So(true, ShouldEqual, mem.MatchString(memNamespace))
 			So(err, ShouldBeNil)
 
-			mem_namespace = joinNamespace(metrics[12].Namespace())
+			memNamespace = joinNamespace(metrics[12].Namespace())
 			mem = regexp.MustCompile(`^/libvirt/.*/test/mem/rss`)
-			So(true, ShouldEqual, mem.MatchString(mem_namespace))
+			So(true, ShouldEqual, mem.MatchString(memNamespace))
 			So(err, ShouldBeNil)
 
-			mem_namespace = joinNamespace(metrics[13].Namespace())
+			memNamespace = joinNamespace(metrics[13].Namespace())
 			mem = regexp.MustCompile(`^/libvirt/.*/test/mem/nr`)
-			So(true, ShouldEqual, mem.MatchString(mem_namespace))
+			So(true, ShouldEqual, mem.MatchString(memNamespace))
 			So(err, ShouldBeNil)
 		})
 
 	})
 	Convey("Collect Metrics", t, func() {
 		libvirtCol := &Libvirt{}
-		cfg_node := cdata.NewNode()
-		cfg_node.AddItem("uri", ctypes.ConfigValueStr{Value: "test:///default"})
+		cfgNode := cdata.NewNode()
+		cfgNode.AddItem("uri", ctypes.ConfigValueStr{Value: "test:///default"})
 		conn, _ := libvirt.NewVirConnection("test:///default")
 		hostname, _ := conn.GetHostname()
 		Convey("So should get cpu metrics", func() {
-			metrics := []plugin.PluginMetricType{plugin.PluginMetricType{
+			metrics := []plugin.PluginMetricType{{
 				Namespace_: []string{"libvirt", hostname, "test", "cpu", "vcpu", "0", "cputime"},
-				Config_:    cfg_node,
+				Config_:    cfgNode,
 			}}
 			collect, err := libvirtCol.CollectMetrics(metrics)
 			So(err, ShouldBeNil)
@@ -202,9 +202,9 @@ func TestLibirtPlugin(t *testing.T) {
 			So(len(collect), ShouldResemble, 1)
 		})
 		Convey("So should get vcpu metrics", func() {
-			metrics := []plugin.PluginMetricType{plugin.PluginMetricType{
+			metrics := []plugin.PluginMetricType{{
 				Namespace_: []string{"libvirt", hostname, "test", "cpu", "cputime"},
-				Config_:    cfg_node,
+				Config_:    cfgNode,
 			}}
 			collect, err := libvirtCol.CollectMetrics(metrics)
 			So(err, ShouldBeNil)

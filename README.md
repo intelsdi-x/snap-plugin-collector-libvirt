@@ -1,4 +1,5 @@
 [![Build Status](https://api.travis-ci.org/intelsdi-x/snap-plugin-collector-libvirt.svg)](https://travis-ci.org/intelsdi-x/snap-plugin-collector-libvirt )
+[![Go Report Card](http://goreportcard.com/badge/intelsdi-x/snap-plugin-collector-libvirt)](http://goreportcard.com/report/intelsdi-x/snap-plugin-collector-libvirt)
 # snap collector plugin - libvirt
 
 1. [Getting Started](#getting-started)

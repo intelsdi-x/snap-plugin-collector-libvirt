@@ -30,61 +30,61 @@ import (
 	"github.com/sandlbn/libvirt-go"
 )
 
-var disk_metrics_types = []string{"wrreq", "rdreq", "wrbytes", "rdbytes"}
+var diskMetricsTypes = []string{"wrreq", "rdreq", "wrbytes", "rdbytes"}
 
 func diskStat(ns []string, dom libvirt.VirDomain) (*plugin.PluginMetricType, error) {
 	switch {
 	case regexp.MustCompile(`^/libvirt/.*/.*/disk/.*/wrreq`).MatchString(joinNamespace(ns)):
 		disk := ns[4]
-		disk_stat, err := dom.BlockStats(disk)
+		diskStat, err := dom.BlockStats(disk)
 		if err != nil {
 			return nil, err
 		}
 		return &plugin.PluginMetricType{
 			Namespace_: ns,
-			Data_:      strconv.FormatInt(disk_stat.WrReq, 10),
+			Data_:      strconv.FormatInt(diskStat.WrReq, 10),
 			Timestamp_: time.Now(),
 		}, nil
 	case regexp.MustCompile(`^/libvirt/.*/.*/disk/.*/rdreq`).MatchString(joinNamespace(ns)):
 		disk := ns[4]
-		disk_stat, err := dom.BlockStats(disk)
+		diskStat, err := dom.BlockStats(disk)
 		if err != nil {
 			return nil, err
 		}
 		return &plugin.PluginMetricType{
 			Namespace_: ns,
-			Data_:      strconv.FormatInt(disk_stat.RdReq, 10),
+			Data_:      strconv.FormatInt(diskStat.RdReq, 10),
 			Timestamp_: time.Now(),
 		}, nil
 	case regexp.MustCompile(`^/libvirt/.*/.*/disk/.*/wrbytes`).MatchString(joinNamespace(ns)):
 		disk := ns[4]
-		disk_stat, err := dom.BlockStats(disk)
+		diskStat, err := dom.BlockStats(disk)
 		if err != nil {
 			return nil, err
 		}
 		return &plugin.PluginMetricType{
 			Namespace_: ns,
-			Data_:      strconv.FormatInt(disk_stat.WrBytes, 10),
+			Data_:      strconv.FormatInt(diskStat.WrBytes, 10),
 			Timestamp_: time.Now(),
 		}, nil
 	case regexp.MustCompile(`^/libvirt/.*/.*/disk/.*/rdbytes`).MatchString(joinNamespace(ns)):
 		disk := ns[4]
-		disk_stat, err := dom.BlockStats(disk)
+		diskStat, err := dom.BlockStats(disk)
 		if err != nil {
 			return nil, err
 		}
 		return &plugin.PluginMetricType{
 			Namespace_: ns,
-			Data_:      strconv.FormatInt(disk_stat.RdBytes, 10),
+			Data_:      strconv.FormatInt(diskStat.RdBytes, 10),
 			Timestamp_: time.Now(),
 		}, nil
 	}
 	return nil, fmt.Errorf("Unknown error processing %v", ns)
 }
 
-func listDisks(domXml *etree.Document) []string {
+func listDisks(domXML *etree.Document) []string {
 	disks := []string{}
-	for _, t := range domXml.FindElements("//domain/devices/disk[@device='disk']/target") {
+	for _, t := range domXML.FindElements("//domain/devices/disk[@device='disk']/target") {
 		for _, i := range t.Attr {
 			if i.Key == "dev" {
 				disks = append(disks, i.Value)
@@ -95,23 +95,23 @@ func listDisks(domXml *etree.Document) []string {
 }
 
 func getDiskMetricTypes(dom libvirt.VirDomain, hostname string) ([]plugin.PluginMetricType, error) {
-	mts := make([]plugin.PluginMetricType, 0)
-	domXmlDesc, err := dom.GetXMLDesc(0)
+	var mts []plugin.PluginMetricType
+	domXMLDesc, err := dom.GetXMLDesc(0)
 	if err != nil {
 		return nil, err
 	}
 
-	domXml := etree.NewDocument()
-	domXml.ReadFromString(domXmlDesc)
+	domXML := etree.NewDocument()
+	domXML.ReadFromString(domXMLDesc)
 
 	domainname, err := dom.GetName()
 	if err != nil {
 		return nil, err
 	}
 
-	for _, metric := range disk_metrics_types {
+	for _, metric := range diskMetricsTypes {
 
-		for _, disk := range listDisks(domXml) {
+		for _, disk := range listDisks(domXML) {
 			mts = append(mts, plugin.PluginMetricType{Namespace_: []string{"libvirt", hostname, domainname, "disk", disk, metric}})
 
 		}

@@ -29,7 +29,7 @@ import (
 	"github.com/sandlbn/libvirt-go"
 )
 
-var cpu_metrics_types = []string{"cputime"}
+var cpuMetricsTypes = []string{"cputime"}
 
 func cpuTimes(ns []string, dom libvirt.VirDomain) (*plugin.PluginMetricType, error) {
 	info, err := dom.GetInfo()
@@ -63,7 +63,7 @@ func cpuTimes(ns []string, dom libvirt.VirDomain) (*plugin.PluginMetricType, err
 }
 
 func getVcpuTime(nr int, info libvirt.VirDomainInfo, dom libvirt.VirDomain) uint64 {
-	var cpuTime uint64 = 0
+	var cpuTime uint64
 	vcpus, err := dom.GetVcpus(int32(info.GetNrVirtCpu()))
 	if err != nil {
 		return cpuTime
@@ -77,8 +77,8 @@ func getVcpuTime(nr int, info libvirt.VirDomainInfo, dom libvirt.VirDomain) uint
 
 }
 
-func getCpuMetricTypes(dom libvirt.VirDomain, hostname string) ([]plugin.PluginMetricType, error) {
-	mts := make([]plugin.PluginMetricType, 0)
+func getCPUMetricTypes(dom libvirt.VirDomain, hostname string) ([]plugin.PluginMetricType, error) {
+	var mts []plugin.PluginMetricType
 
 	domainname, err := dom.GetName()
 	if err != nil {
@@ -88,9 +88,9 @@ func getCpuMetricTypes(dom libvirt.VirDomain, hostname string) ([]plugin.PluginM
 	if err != nil {
 		return nil, err
 	}
-	var i uint16 = 0
+	var i uint16
 
-	for _, metric := range cpu_metrics_types {
+	for _, metric := range cpuMetricsTypes {
 
 		for i = 0; i < info.GetNrVirtCpu(); i++ {
 

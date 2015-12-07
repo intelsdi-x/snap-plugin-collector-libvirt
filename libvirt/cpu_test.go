@@ -54,9 +54,9 @@ func TestLibirtPluginCpu(t *testing.T) {
 		Convey("Join namespace ", func() {
 			dom, _ := conn.LookupDomainByName(hostname)
 			So(dom, ShouldNotBeNil)
-			cpu_types, err := getCpuMetricTypes(dom, "test")
+			cpuTypes, err := getCPUMetricTypes(dom, "test")
 			So(err, ShouldBeNil)
-			So(3, ShouldResemble, len(cpu_types))
+			So(3, ShouldResemble, len(cpuTypes))
 		})
 
 	})

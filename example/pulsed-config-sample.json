@@ -6,7 +6,7 @@
         "collector": {
             "libvirt": {
                 "versions": {
-                    "1": {
+                    "3": {
                     "uri": "qemu+tcp://10.1.0.75/system"
                         
                     }
