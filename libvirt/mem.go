@@ -29,7 +29,7 @@ import (
 	"github.com/sandlbn/libvirt-go"
 )
 
-var memory_metrics_types = []string{"mem", "max", "swap_in", "swap_out", "major_fault",
+var memoryMetricsTypes = []string{"mem", "max", "swap_in", "swap_out", "major_fault",
 	"min_fault", "unused", "available", "actual_balloon", "rss", "nr"}
 
 func memStat(ns []string, dom libvirt.VirDomain) (*plugin.PluginMetricType, error) {
@@ -54,44 +54,44 @@ func memStat(ns []string, dom libvirt.VirDomain) (*plugin.PluginMetricType, erro
 			Timestamp_: time.Now(),
 		}, nil
 	case regexp.MustCompile(`^/libvirt/.*/.*/mem/swap_in`).MatchString(joinNamespace(ns)):
-		swap_in, err := getMemoryInfo("swap_in", dom)
+		swapIn, err := getMemoryInfo("swap_in", dom)
 		if err != nil {
-			fmt.Println(err)
+			return nil, err
 		}
-		memory := strconv.FormatUint(swap_in, 10)
+		memory := strconv.FormatUint(swapIn, 10)
 		return &plugin.PluginMetricType{
 			Namespace_: ns,
 			Data_:      memory,
 			Timestamp_: time.Now(),
 		}, nil
 	case regexp.MustCompile(`^/libvirt/.*/.*/mem/swap_out`).MatchString(joinNamespace(ns)):
-		swap_out, err := getMemoryInfo("swap_out", dom)
+		swapOut, err := getMemoryInfo("swap_out", dom)
 		if err != nil {
-			fmt.Println(err)
+			return nil, err
 		}
-		memory := strconv.FormatUint(swap_out, 10)
+		memory := strconv.FormatUint(swapOut, 10)
 		return &plugin.PluginMetricType{
 			Namespace_: ns,
 			Data_:      memory,
 			Timestamp_: time.Now(),
 		}, nil
 	case regexp.MustCompile(`^/libvirt/.*/.*/mem/min_fault`).MatchString(joinNamespace(ns)):
-		min_fault, err := getMemoryInfo("min_fault", dom)
+		minFault, err := getMemoryInfo("min_fault", dom)
 		if err != nil {
-			fmt.Println(err)
+			return nil, err
 		}
-		memory := strconv.FormatUint(min_fault, 10)
+		memory := strconv.FormatUint(minFault, 10)
 		return &plugin.PluginMetricType{
 			Namespace_: ns,
 			Data_:      memory,
 			Timestamp_: time.Now(),
 		}, nil
 	case regexp.MustCompile(`^/libvirt/.*/.*/mem/major_fault`).MatchString(joinNamespace(ns)):
-		major_fault, err := getMemoryInfo("major_fault", dom)
+		majorFault, err := getMemoryInfo("major_fault", dom)
 		if err != nil {
-			fmt.Println(err)
+			return nil, err
 		}
-		memory := strconv.FormatUint(major_fault, 10)
+		memory := strconv.FormatUint(majorFault, 10)
 		return &plugin.PluginMetricType{
 			Namespace_: ns,
 			Data_:      memory,
@@ -100,7 +100,7 @@ func memStat(ns []string, dom libvirt.VirDomain) (*plugin.PluginMetricType, erro
 	case regexp.MustCompile(`^/libvirt/.*/.*/mem/unused`).MatchString(joinNamespace(ns)):
 		unused, err := getMemoryInfo("unused", dom)
 		if err != nil {
-			fmt.Println(err)
+			return nil, err
 		}
 		memory := strconv.FormatUint(unused, 10)
 		return &plugin.PluginMetricType{
@@ -111,7 +111,7 @@ func memStat(ns []string, dom libvirt.VirDomain) (*plugin.PluginMetricType, erro
 	case regexp.MustCompile(`^/libvirt/.*/.*/mem/available`).MatchString(joinNamespace(ns)):
 		available, err := getMemoryInfo("available", dom)
 		if err != nil {
-			fmt.Println(err)
+			return nil, err
 		}
 		memory := strconv.FormatUint(available, 10)
 		return &plugin.PluginMetricType{
@@ -120,11 +120,11 @@ func memStat(ns []string, dom libvirt.VirDomain) (*plugin.PluginMetricType, erro
 			Timestamp_: time.Now(),
 		}, nil
 	case regexp.MustCompile(`^/libvirt/.*/.*/mem/actual_balloon`).MatchString(joinNamespace(ns)):
-		actual_balloon, err := getMemoryInfo("actual_balloon", dom)
+		actualBalloon, err := getMemoryInfo("actual_balloon", dom)
 		if err != nil {
-			fmt.Println(err)
+			return nil, err
 		}
-		memory := strconv.FormatUint(actual_balloon, 10)
+		memory := strconv.FormatUint(actualBalloon, 10)
 		return &plugin.PluginMetricType{
 			Namespace_: ns,
 			Data_:      memory,
@@ -133,7 +133,7 @@ func memStat(ns []string, dom libvirt.VirDomain) (*plugin.PluginMetricType, erro
 	case regexp.MustCompile(`^/libvirt/.*/.*/mem/rss`).MatchString(joinNamespace(ns)):
 		rss, err := getMemoryInfo("rss", dom)
 		if err != nil {
-			fmt.Println(err)
+			return nil, err
 		}
 		memory := strconv.FormatUint(rss, 10)
 		return &plugin.PluginMetricType{
@@ -144,7 +144,7 @@ func memStat(ns []string, dom libvirt.VirDomain) (*plugin.PluginMetricType, erro
 	case regexp.MustCompile(`^/libvirt/.*/.*/mem/nr`).MatchString(joinNamespace(ns)):
 		nr, err := getMemoryInfo("nr", dom)
 		if err != nil {
-			fmt.Println(err)
+			return nil, err
 		}
 		memory := strconv.FormatUint(nr, 10)
 		return &plugin.PluginMetricType{
@@ -187,7 +187,7 @@ func getMemoryInfo(tag string, dom libvirt.VirDomain) (uint64, error) {
 
 func parseMemStats(memstat []libvirt.VirDomainMemoryStat, nr int32) uint64 {
 
-	var metric uint64 = 0
+	var metric uint64
 	for i := 0; i < len(memstat); i++ {
 		fmt.Println(i, memstat[i].Tag, memstat[i].Val)
 		if memstat[i].Tag == nr {
@@ -198,14 +198,14 @@ func parseMemStats(memstat []libvirt.VirDomainMemoryStat, nr int32) uint64 {
 
 }
 func getMemMetricTypes(dom libvirt.VirDomain, hostname string) ([]plugin.PluginMetricType, error) {
-	mts := make([]plugin.PluginMetricType, 0)
+	var mts []plugin.PluginMetricType
 
 	domainname, err := dom.GetName()
 	if err != nil {
 		return nil, err
 	}
 
-	for _, metric := range memory_metrics_types {
+	for _, metric := range memoryMetricsTypes {
 
 		mts = append(mts, plugin.PluginMetricType{Namespace_: []string{"libvirt", hostname, domainname, "mem", metric}})
 	}

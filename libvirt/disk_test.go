@@ -36,10 +36,10 @@ func TestLibirtPluginDisk(t *testing.T) {
 		if err != nil {
 			panic(err)
 		}
-		domXmlStr := string(buf)
-		domXml := etree.NewDocument()
-		domXml.ReadFromString(domXmlStr)
-		data := listDisks(domXml)
+		domXMLStr := string(buf)
+		domXML := etree.NewDocument()
+		domXML.ReadFromString(domXMLStr)
+		data := listDisks(domXML)
 		So(data, ShouldResemble, []string{"vda"})
 
 	})
@@ -48,10 +48,10 @@ func TestLibirtPluginDisk(t *testing.T) {
 		if err != nil {
 			panic(err)
 		}
-		domXmlStr := string(buf)
-		domXml := etree.NewDocument()
-		domXml.ReadFromString(domXmlStr)
-		data := listDisks(domXml)
+		domXMLStr := string(buf)
+		domXML := etree.NewDocument()
+		domXML.ReadFromString(domXMLStr)
+		data := listDisks(domXML)
 		So(data, ShouldResemble, []string{})
 
 	})

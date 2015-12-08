@@ -20,7 +20,7 @@ limitations under the License.
 package libvirt
 
 import (
-	"errors"
+	"fmt"
 	"regexp"
 	"strings"
 
@@ -34,21 +34,24 @@ const (
 	// Name of plugin
 	Name = "libvirt"
 	// Version of plugin
-	Version = 2
+	Version = 3
 	// Type of plugin
 	Type = plugin.CollectorPluginType
 )
 
+// Meta declaration for plugin
 func Meta() *plugin.PluginMeta {
 	return plugin.NewPluginMeta(Name, Version, Type, []string{plugin.SnapGOBContentType}, []string{plugin.SnapGOBContentType})
 }
 
+// Libvirt type
 type Libvirt struct {
 }
 
 // Default qemu libvirt URI
 var defaultURI = "qemu:///system"
 
+// NewLibvirtCollector returns new instance of collector
 func NewLibvirtCollector() *Libvirt {
 	return &Libvirt{}
 
@@ -58,66 +61,90 @@ func joinNamespace(ns []string) string {
 	return "/" + strings.Join(ns, "/")
 }
 
+// CollectMetrics returns collected metrics
 func (p *Libvirt) CollectMetrics(mts []plugin.PluginMetricType) ([]plugin.PluginMetricType, error) {
-	cpure := regexp.MustCompile(`^/libvirt/.*/.*/cpu/.*`)
-	memre := regexp.MustCompile(`^/libvirt/.*/.*/mem/.*`)
-	netre := regexp.MustCompile(`^/libvirt/.*/.*/net/.*`)
-	diskre := regexp.MustCompile(`^/libvirt/.*/.*/disk/.*`)
-	metrics := make([]plugin.PluginMetricType, len(mts))
-	conn, err := libvirt.NewVirConnection(getHypervisorUri(mts[0].Config().Table()))
+	metrics := []plugin.PluginMetricType{}
+	conn, err := libvirt.NewVirConnection(getHypervisorURI(mts[0].Config().Table()))
 
 	if err != nil {
 		return nil, err
 	}
 	defer conn.CloseConnection()
 
-	for i, p := range mts {
-
-		domainName, err := namespacetoDomain(p.Namespace())
-		if err != nil {
-			return nil, err
-		}
-		dom, err := conn.LookupDomainByName(domainName)
-		if err != nil {
-			return nil, err
-		}
-		defer dom.Free()
+	for _, p := range mts {
 
 		ns := joinNamespace(p.Namespace())
-		switch {
-		case memre.MatchString(ns):
-			metric, err := memStat(p.Namespace(), dom)
+		if string(p.Namespace()[2]) == "*" {
+			nscopy := make([]string, len(p.Namespace()))
+			copy(nscopy, p.Namespace())
+			domains, err := conn.ListDomains()
 			if err != nil {
-				return nil, err
+				return metrics, err
 			}
-			metrics[i] = *metric
+			for j := 0; j < domainCount(domains); j++ {
+				dom, err := conn.LookupDomainById(domains[j])
+				if err != nil {
+					return metrics, err
+				}
+				defer dom.Free()
+				metric, err := processMetric(ns, dom, p)
+				if err != nil {
+					return metrics, err
+				}
+				metrics = append(metrics, metric)
 
-		case cpure.MatchString(ns):
-			metric, err := cpuTimes(p.Namespace(), dom)
-			if err != nil {
-				return nil, err
 			}
-			metrics[i] = *metric
-		case netre.MatchString(ns):
-			metric, err := interfaceStat(p.Namespace(), dom)
-			if err != nil {
-				return nil, err
-			}
-			metrics[i] = *metric
-		case diskre.MatchString(ns):
-			metric, err := diskStat(p.Namespace(), dom)
-			if err != nil {
-				return nil, err
-			}
-			metrics[i] = *metric
+		} else {
 
+			domainName, err := namespacetoDomain(p.Namespace())
+			if err != nil {
+				return nil, err
+			}
+			dom, err := conn.LookupDomainByName(domainName)
+			if err != nil {
+				return nil, err
+			}
+			defer dom.Free()
+			metric, err := processMetric(ns, dom, p)
+			metric.Source_, _ = conn.GetHostname()
+			if err != nil {
+				return metrics, err
+			}
+			metrics = append(metrics, metric)
 		}
-		metrics[i].Source_, _ = conn.GetHostname()
 
 	}
-	return metrics, nil
+	return metrics, err
 }
 
+func processMetric(ns string, dom libvirt.VirDomain, p plugin.PluginMetricType) (plugin.PluginMetricType, error) {
+	cpure := regexp.MustCompile(`^/libvirt/.*/.*/cpu/.*`)
+	memre := regexp.MustCompile(`^/libvirt/.*/.*/mem/.*`)
+	netre := regexp.MustCompile(`^/libvirt/.*/.*/net/.*`)
+	diskre := regexp.MustCompile(`^/libvirt/.*/.*/disk/.*`)
+
+	switch {
+	case memre.MatchString(ns):
+		metric, err := memStat(p.Namespace(), dom)
+		return *metric, err
+
+	case cpure.MatchString(ns):
+		metric, err := cpuTimes(p.Namespace(), dom)
+		return *metric, err
+
+	case netre.MatchString(ns):
+		metric, err := interfaceStat(p.Namespace(), dom)
+		return *metric, err
+
+	case diskre.MatchString(ns):
+		metric, err := diskStat(p.Namespace(), dom)
+		return *metric, err
+
+	}
+	return plugin.PluginMetricType{}, fmt.Errorf("Failed to process metric, unknown type %s", ns)
+}
+
+// GetConfigPolicy returns a config policy
 func (p *Libvirt) GetConfigPolicy() (*cpolicy.ConfigPolicy, error) {
 	cp := cpolicy.New()
 	config := cpolicy.NewPolicyNode()
@@ -132,15 +159,16 @@ func (p *Libvirt) GetConfigPolicy() (*cpolicy.ConfigPolicy, error) {
 
 }
 
+// GetMetricTypes returns metric types that can be collected
 func (p *Libvirt) GetMetricTypes(cfg plugin.PluginConfigType) ([]plugin.PluginMetricType, error) {
 
-	conn, err := libvirt.NewVirConnection(getHypervisorUri(cfg.Table()))
+	conn, err := libvirt.NewVirConnection(getHypervisorURI(cfg.Table()))
 
 	if err != nil {
 		handleErr(err)
 	}
 
-	metrics := make([]plugin.PluginMetricType, 0)
+	var metrics []plugin.PluginMetricType
 
 	domains, err := conn.ListDomains()
 	if err != nil {
@@ -160,26 +188,38 @@ func (p *Libvirt) GetMetricTypes(cfg plugin.PluginConfigType) ([]plugin.PluginMe
 		}
 		defer dom.Free()
 
-		net_mts, err := getNetMetricTypes(dom, hostname)
+		netMts, err := getNetMetricTypes(dom, hostname)
 		if err != nil {
 			handleErr(err)
 		}
-		metrics = append(metrics, net_mts...)
-		cpu_mts, err := getCpuMetricTypes(dom, hostname)
+		metrics = append(metrics, netMts...)
+		cpuMts, err := getCPUMetricTypes(dom, hostname)
 		if err != nil {
 			handleErr(err)
 		}
-		metrics = append(metrics, cpu_mts...)
-		mem_mts, err := getMemMetricTypes(dom, hostname)
+		metrics = append(metrics, cpuMts...)
+		memMts, err := getMemMetricTypes(dom, hostname)
 		if err != nil {
 			handleErr(err)
 		}
-		metrics = append(metrics, mem_mts...)
-		disk_mts, err := getDiskMetricTypes(dom, hostname)
+		metrics = append(metrics, memMts...)
+		diskMts, err := getDiskMetricTypes(dom, hostname)
 		if err != nil {
 			handleErr(err)
 		}
-		metrics = append(metrics, disk_mts...)
+		metrics = append(metrics, diskMts...)
+	}
+	for _, metric := range netMetricsTypes {
+		metrics = append(metrics, plugin.PluginMetricType{Namespace_: []string{"libvirt", hostname, "*", "net", metric}})
+	}
+	for _, metric := range diskMetricsTypes {
+		metrics = append(metrics, plugin.PluginMetricType{Namespace_: []string{"libvirt", hostname, "*", "disk", metric}})
+	}
+	for _, metric := range cpuMetricsTypes {
+		metrics = append(metrics, plugin.PluginMetricType{Namespace_: []string{"libvirt", hostname, "*", "cpu", metric}})
+	}
+	for _, metric := range memoryMetricsTypes {
+		metrics = append(metrics, plugin.PluginMetricType{Namespace_: []string{"libvirt", hostname, "*", "mem", metric}})
 	}
 	return metrics, nil
 }
@@ -191,8 +231,7 @@ func namespacetoDomain(namespace []string) (string, error) {
 	if len(namespace) > 2 {
 		return namespace[2], nil
 	}
-	err := errors.New("Namespace is too short")
-	return "", err
+	return "", fmt.Errorf("Namespace is too short")
 
 }
 
@@ -202,11 +241,10 @@ func handleErr(e error) {
 	}
 }
 
-func getHypervisorUri(cfg map[string]ctypes.ConfigValue) string {
-	if cfg_uri, ok := cfg["uri"]; ok {
-		return cfg_uri.(ctypes.ConfigValueStr).Value
+func getHypervisorURI(cfg map[string]ctypes.ConfigValue) string {
+	if cfgURI, ok := cfg["uri"]; ok {
+		return cfgURI.(ctypes.ConfigValueStr).Value
 
-	} else {
-		return defaultURI
 	}
+	return defaultURI
 }
