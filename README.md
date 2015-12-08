@@ -78,10 +78,6 @@ Namespace | Data Type | Description
 **_IMPORTANT_**: not all hypervisors expose all these metrics. Please check
 your hypervisor or libvirt documentation.
 
-### Community Support
-This repository is one of **many** plugins in the **snap framework**: a powerful telemetry agent framework.
-The full project is at https://github.com/intelsdi-x/snap.
-
 ### Roadmap
 As we launch this plugin, we do not have any outstanding requirements for the next release. If you have a feature request, please add it as an [issue](https://github.com/intelsdi-x/snap-plugin-collector-libvirt/issues).
 
