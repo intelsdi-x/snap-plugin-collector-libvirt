@@ -106,9 +106,9 @@ func TestLibirtPlugin(t *testing.T) {
 		var cfg = plugin.PluginConfigType{
 			ConfigDataNode: cfgNode,
 		}
-		Convey("So should return 38 types of metrics", func() {
+		Convey("So should return 26 types of metrics", func() {
 			metrics, err := libvirtCol.GetMetricTypes(cfg)
-			So(38, ShouldResemble, len(metrics))
+			So(26, ShouldResemble, len(metrics))
 			So(err, ShouldBeNil)
 		})
 		Convey("So should check namespace", func() {

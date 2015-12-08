@@ -34,7 +34,7 @@ const (
 	// Name of plugin
 	Name = "libvirt"
 	// Version of plugin
-	Version = 3
+	Version = 4
 	// Type of plugin
 	Type = plugin.CollectorPluginType
 )
@@ -91,6 +91,7 @@ func (p *Libvirt) CollectMetrics(mts []plugin.PluginMetricType) ([]plugin.Plugin
 				if err != nil {
 					return metrics, err
 				}
+				metric.Source_, _ = conn.GetHostname()
 				metrics = append(metrics, metric)
 
 			}
@@ -208,12 +209,6 @@ func (p *Libvirt) GetMetricTypes(cfg plugin.PluginConfigType) ([]plugin.PluginMe
 			handleErr(err)
 		}
 		metrics = append(metrics, diskMts...)
-	}
-	for _, metric := range netMetricsTypes {
-		metrics = append(metrics, plugin.PluginMetricType{Namespace_: []string{"libvirt", hostname, "*", "net", metric}})
-	}
-	for _, metric := range diskMetricsTypes {
-		metrics = append(metrics, plugin.PluginMetricType{Namespace_: []string{"libvirt", hostname, "*", "disk", metric}})
 	}
 	for _, metric := range cpuMetricsTypes {
 		metrics = append(metrics, plugin.PluginMetricType{Namespace_: []string{"libvirt", hostname, "*", "cpu", metric}})

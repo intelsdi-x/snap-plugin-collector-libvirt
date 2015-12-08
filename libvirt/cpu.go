@@ -39,6 +39,13 @@ func cpuTimes(ns []string, dom libvirt.VirDomain) (*plugin.PluginMetricType, err
 	switch {
 	case regexp.MustCompile(`^/libvirt/.*/.*/cpu/cputime`).MatchString(joinNamespace(ns)):
 		cpuTime := strconv.FormatUint(info.GetCpuTime(), 10)
+		if ns[2] == "*" {
+			domainName, err := dom.GetName()
+			if err != nil {
+				return nil, err
+			}
+			ns[2] = domainName
+		}
 		return &plugin.PluginMetricType{
 			Namespace_: ns,
 			Data_:      cpuTime,

@@ -37,6 +37,13 @@ func memStat(ns []string, dom libvirt.VirDomain) (*plugin.PluginMetricType, erro
 	if err != nil {
 		return nil, err
 	}
+	if ns[2] == "*" {
+		domainName, err := dom.GetName()
+		if err != nil {
+			return nil, err
+		}
+		ns[2] = domainName
+	}
 
 	switch {
 	case regexp.MustCompile(`^/libvirt/.*/.*/mem/mem`).MatchString(joinNamespace(ns)):
