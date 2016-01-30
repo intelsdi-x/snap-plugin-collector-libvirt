@@ -34,7 +34,7 @@ const (
 	// Name of plugin
 	Name = "libvirt"
 	// Version of plugin
-	Version = 4
+	Version = 5
 	// Type of plugin
 	Type = plugin.CollectorPluginType
 )
