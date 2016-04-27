@@ -22,7 +22,6 @@ package libvirt
 import (
 	"fmt"
 	"regexp"
-	"strconv"
 	"time"
 
 	"github.com/beevik/etree"
@@ -43,7 +42,7 @@ func interfaceStat(ns []string, dom libvirt.VirDomain) (*plugin.PluginMetricType
 		}
 		return &plugin.PluginMetricType{
 			Namespace_: ns,
-			Data_:      strconv.FormatInt(ifaceStat.RxBytes, 10),
+			Data_:      ifaceStat.RxBytes,
 			Timestamp_: time.Now(),
 		}, nil
 	case regexp.MustCompile(`^/libvirt/.*/.*/net/.*/rxpackets`).MatchString(joinNamespace(ns)):
@@ -87,7 +86,7 @@ func interfaceStat(ns []string, dom libvirt.VirDomain) (*plugin.PluginMetricType
 		}
 		return &plugin.PluginMetricType{
 			Namespace_: ns,
-			Data_:      strconv.FormatInt(ifaceStat.TxBytes, 10),
+			Data_:      ifaceStat.TxBytes,
 			Timestamp_: time.Now(),
 		}, nil
 	case regexp.MustCompile(`^/libvirt/.*/.*/net/.*/txpackets`).MatchString(joinNamespace(ns)):

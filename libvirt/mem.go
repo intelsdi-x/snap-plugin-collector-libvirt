@@ -22,7 +22,6 @@ package libvirt
 import (
 	"fmt"
 	"regexp"
-	"strconv"
 	"time"
 
 	"github.com/intelsdi-x/snap/control/plugin"
@@ -47,14 +46,14 @@ func memStat(ns []string, dom libvirt.VirDomain) (*plugin.PluginMetricType, erro
 
 	switch {
 	case regexp.MustCompile(`^/libvirt/.*/.*/mem/mem`).MatchString(joinNamespace(ns)):
-		memory := strconv.FormatUint(info.GetMemory(), 10)
+		memory := info.GetMemory()
 		return &plugin.PluginMetricType{
 			Namespace_: ns,
 			Data_:      memory,
 			Timestamp_: time.Now(),
 		}, nil
 	case regexp.MustCompile(`^/libvirt/.*/.*/mem/max`).MatchString(joinNamespace(ns)):
-		memory := strconv.FormatUint(info.GetMaxMem(), 10)
+		memory := info.GetMaxMem()
 		return &plugin.PluginMetricType{
 			Namespace_: ns,
 			Data_:      memory,
@@ -65,7 +64,7 @@ func memStat(ns []string, dom libvirt.VirDomain) (*plugin.PluginMetricType, erro
 		if err != nil {
 			return nil, err
 		}
-		memory := strconv.FormatUint(swapIn, 10)
+		memory := swapIn
 		return &plugin.PluginMetricType{
 			Namespace_: ns,
 			Data_:      memory,
@@ -76,7 +75,7 @@ func memStat(ns []string, dom libvirt.VirDomain) (*plugin.PluginMetricType, erro
 		if err != nil {
 			return nil, err
 		}
-		memory := strconv.FormatUint(swapOut, 10)
+		memory := swapOut
 		return &plugin.PluginMetricType{
 			Namespace_: ns,
 			Data_:      memory,
@@ -87,7 +86,7 @@ func memStat(ns []string, dom libvirt.VirDomain) (*plugin.PluginMetricType, erro
 		if err != nil {
 			return nil, err
 		}
-		memory := strconv.FormatUint(minFault, 10)
+		memory := minFault
 		return &plugin.PluginMetricType{
 			Namespace_: ns,
 			Data_:      memory,
@@ -98,7 +97,7 @@ func memStat(ns []string, dom libvirt.VirDomain) (*plugin.PluginMetricType, erro
 		if err != nil {
 			return nil, err
 		}
-		memory := strconv.FormatUint(majorFault, 10)
+		memory := majorFault
 		return &plugin.PluginMetricType{
 			Namespace_: ns,
 			Data_:      memory,
@@ -109,7 +108,7 @@ func memStat(ns []string, dom libvirt.VirDomain) (*plugin.PluginMetricType, erro
 		if err != nil {
 			return nil, err
 		}
-		memory := strconv.FormatUint(unused, 10)
+		memory := unused
 		return &plugin.PluginMetricType{
 			Namespace_: ns,
 			Data_:      memory,
@@ -120,7 +119,7 @@ func memStat(ns []string, dom libvirt.VirDomain) (*plugin.PluginMetricType, erro
 		if err != nil {
 			return nil, err
 		}
-		memory := strconv.FormatUint(available, 10)
+		memory := available
 		return &plugin.PluginMetricType{
 			Namespace_: ns,
 			Data_:      memory,
@@ -131,7 +130,7 @@ func memStat(ns []string, dom libvirt.VirDomain) (*plugin.PluginMetricType, erro
 		if err != nil {
 			return nil, err
 		}
-		memory := strconv.FormatUint(actualBalloon, 10)
+		memory := actualBalloon
 		return &plugin.PluginMetricType{
 			Namespace_: ns,
 			Data_:      memory,
@@ -142,7 +141,7 @@ func memStat(ns []string, dom libvirt.VirDomain) (*plugin.PluginMetricType, erro
 		if err != nil {
 			return nil, err
 		}
-		memory := strconv.FormatUint(rss, 10)
+		memory := rss
 		return &plugin.PluginMetricType{
 			Namespace_: ns,
 			Data_:      memory,
@@ -153,7 +152,7 @@ func memStat(ns []string, dom libvirt.VirDomain) (*plugin.PluginMetricType, erro
 		if err != nil {
 			return nil, err
 		}
-		memory := strconv.FormatUint(nr, 10)
+		memory := nr
 		return &plugin.PluginMetricType{
 			Namespace_: ns,
 			Data_:      memory,
