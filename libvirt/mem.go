@@ -2,7 +2,7 @@
 http://www.apache.org/licenses/LICENSE-2.0.txt
 
 
-Copyright 2015 Intel Corporation
+Copyright 2015-2016 Intel Corporation
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -36,30 +36,30 @@ func memStat(ns []string, dom libvirt.VirDomain) (*plugin.PluginMetricType, erro
 	if err != nil {
 		return nil, err
 	}
-	if ns[2] == "*" {
+	if ns[1] == "*" {
 		domainName, err := dom.GetName()
 		if err != nil {
 			return nil, err
 		}
-		ns[2] = domainName
+		ns[1] = domainName
 	}
 
 	switch {
-	case regexp.MustCompile(`^/libvirt/.*/.*/mem/mem`).MatchString(joinNamespace(ns)):
+	case regexp.MustCompile(`^/libvirt/.*/mem/mem`).MatchString(joinNamespace(ns)):
 		memory := info.GetMemory()
 		return &plugin.PluginMetricType{
 			Namespace_: ns,
 			Data_:      memory,
 			Timestamp_: time.Now(),
 		}, nil
-	case regexp.MustCompile(`^/libvirt/.*/.*/mem/max`).MatchString(joinNamespace(ns)):
+	case regexp.MustCompile(`^/libvirt/.*/mem/max`).MatchString(joinNamespace(ns)):
 		memory := info.GetMaxMem()
 		return &plugin.PluginMetricType{
 			Namespace_: ns,
 			Data_:      memory,
 			Timestamp_: time.Now(),
 		}, nil
-	case regexp.MustCompile(`^/libvirt/.*/.*/mem/swap_in`).MatchString(joinNamespace(ns)):
+	case regexp.MustCompile(`^/libvirt/.*/mem/swap_in`).MatchString(joinNamespace(ns)):
 		swapIn, err := getMemoryInfo("swap_in", dom)
 		if err != nil {
 			return nil, err
@@ -70,7 +70,7 @@ func memStat(ns []string, dom libvirt.VirDomain) (*plugin.PluginMetricType, erro
 			Data_:      memory,
 			Timestamp_: time.Now(),
 		}, nil
-	case regexp.MustCompile(`^/libvirt/.*/.*/mem/swap_out`).MatchString(joinNamespace(ns)):
+	case regexp.MustCompile(`^/libvirt/.*/mem/swap_out`).MatchString(joinNamespace(ns)):
 		swapOut, err := getMemoryInfo("swap_out", dom)
 		if err != nil {
 			return nil, err
@@ -81,7 +81,7 @@ func memStat(ns []string, dom libvirt.VirDomain) (*plugin.PluginMetricType, erro
 			Data_:      memory,
 			Timestamp_: time.Now(),
 		}, nil
-	case regexp.MustCompile(`^/libvirt/.*/.*/mem/min_fault`).MatchString(joinNamespace(ns)):
+	case regexp.MustCompile(`^/libvirt/.*/mem/min_fault`).MatchString(joinNamespace(ns)):
 		minFault, err := getMemoryInfo("min_fault", dom)
 		if err != nil {
 			return nil, err
@@ -92,7 +92,7 @@ func memStat(ns []string, dom libvirt.VirDomain) (*plugin.PluginMetricType, erro
 			Data_:      memory,
 			Timestamp_: time.Now(),
 		}, nil
-	case regexp.MustCompile(`^/libvirt/.*/.*/mem/major_fault`).MatchString(joinNamespace(ns)):
+	case regexp.MustCompile(`^/libvirt/.*/mem/major_fault`).MatchString(joinNamespace(ns)):
 		majorFault, err := getMemoryInfo("major_fault", dom)
 		if err != nil {
 			return nil, err
@@ -103,7 +103,7 @@ func memStat(ns []string, dom libvirt.VirDomain) (*plugin.PluginMetricType, erro
 			Data_:      memory,
 			Timestamp_: time.Now(),
 		}, nil
-	case regexp.MustCompile(`^/libvirt/.*/.*/mem/unused`).MatchString(joinNamespace(ns)):
+	case regexp.MustCompile(`^/libvirt/.*/mem/unused`).MatchString(joinNamespace(ns)):
 		unused, err := getMemoryInfo("unused", dom)
 		if err != nil {
 			return nil, err
@@ -114,7 +114,7 @@ func memStat(ns []string, dom libvirt.VirDomain) (*plugin.PluginMetricType, erro
 			Data_:      memory,
 			Timestamp_: time.Now(),
 		}, nil
-	case regexp.MustCompile(`^/libvirt/.*/.*/mem/available`).MatchString(joinNamespace(ns)):
+	case regexp.MustCompile(`^/libvirt/.*/mem/available`).MatchString(joinNamespace(ns)):
 		available, err := getMemoryInfo("available", dom)
 		if err != nil {
 			return nil, err
@@ -125,7 +125,7 @@ func memStat(ns []string, dom libvirt.VirDomain) (*plugin.PluginMetricType, erro
 			Data_:      memory,
 			Timestamp_: time.Now(),
 		}, nil
-	case regexp.MustCompile(`^/libvirt/.*/.*/mem/actual_balloon`).MatchString(joinNamespace(ns)):
+	case regexp.MustCompile(`^/libvirt/.*/mem/actual_balloon`).MatchString(joinNamespace(ns)):
 		actualBalloon, err := getMemoryInfo("actual_balloon", dom)
 		if err != nil {
 			return nil, err
@@ -136,7 +136,7 @@ func memStat(ns []string, dom libvirt.VirDomain) (*plugin.PluginMetricType, erro
 			Data_:      memory,
 			Timestamp_: time.Now(),
 		}, nil
-	case regexp.MustCompile(`^/libvirt/.*/.*/mem/rss`).MatchString(joinNamespace(ns)):
+	case regexp.MustCompile(`^/libvirt/.*/mem/rss`).MatchString(joinNamespace(ns)):
 		rss, err := getMemoryInfo("rss", dom)
 		if err != nil {
 			return nil, err
@@ -147,7 +147,7 @@ func memStat(ns []string, dom libvirt.VirDomain) (*plugin.PluginMetricType, erro
 			Data_:      memory,
 			Timestamp_: time.Now(),
 		}, nil
-	case regexp.MustCompile(`^/libvirt/.*/.*/mem/nr`).MatchString(joinNamespace(ns)):
+	case regexp.MustCompile(`^/libvirt/.*/mem/nr`).MatchString(joinNamespace(ns)):
 		nr, err := getMemoryInfo("nr", dom)
 		if err != nil {
 			return nil, err
@@ -203,7 +203,7 @@ func parseMemStats(memstat []libvirt.VirDomainMemoryStat, nr int32) uint64 {
 	return metric
 
 }
-func getMemMetricTypes(dom libvirt.VirDomain, hostname string) ([]plugin.PluginMetricType, error) {
+func getMemMetricTypes(dom libvirt.VirDomain) ([]plugin.PluginMetricType, error) {
 	var mts []plugin.PluginMetricType
 
 	domainname, err := dom.GetName()
@@ -213,7 +213,7 @@ func getMemMetricTypes(dom libvirt.VirDomain, hostname string) ([]plugin.PluginM
 
 	for _, metric := range memoryMetricsTypes {
 
-		mts = append(mts, plugin.PluginMetricType{Namespace_: []string{"libvirt", hostname, domainname, "mem", metric}})
+		mts = append(mts, plugin.PluginMetricType{Namespace_: []string{"libvirt", domainname, "mem", metric}})
 	}
 	return mts, nil
 }
