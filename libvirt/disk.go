@@ -22,7 +22,6 @@ package libvirt
 import (
 	"fmt"
 	"regexp"
-	"strconv"
 	"time"
 
 	"github.com/beevik/etree"
@@ -42,7 +41,7 @@ func diskStat(ns []string, dom libvirt.VirDomain) (*plugin.PluginMetricType, err
 		}
 		return &plugin.PluginMetricType{
 			Namespace_: ns,
-			Data_:      strconv.FormatInt(diskStat.WrReq, 10),
+			Data_:      diskStat.WrReq,
 			Timestamp_: time.Now(),
 		}, nil
 	case regexp.MustCompile(`^/libvirt/.*/.*/disk/.*/rdreq`).MatchString(joinNamespace(ns)):
@@ -53,7 +52,7 @@ func diskStat(ns []string, dom libvirt.VirDomain) (*plugin.PluginMetricType, err
 		}
 		return &plugin.PluginMetricType{
 			Namespace_: ns,
-			Data_:      strconv.FormatInt(diskStat.RdReq, 10),
+			Data_:      diskStat.RdReq,
 			Timestamp_: time.Now(),
 		}, nil
 	case regexp.MustCompile(`^/libvirt/.*/.*/disk/.*/wrbytes`).MatchString(joinNamespace(ns)):
@@ -64,7 +63,7 @@ func diskStat(ns []string, dom libvirt.VirDomain) (*plugin.PluginMetricType, err
 		}
 		return &plugin.PluginMetricType{
 			Namespace_: ns,
-			Data_:      strconv.FormatInt(diskStat.WrBytes, 10),
+			Data_:      diskStat.WrBytes,
 			Timestamp_: time.Now(),
 		}, nil
 	case regexp.MustCompile(`^/libvirt/.*/.*/disk/.*/rdbytes`).MatchString(joinNamespace(ns)):
@@ -75,7 +74,7 @@ func diskStat(ns []string, dom libvirt.VirDomain) (*plugin.PluginMetricType, err
 		}
 		return &plugin.PluginMetricType{
 			Namespace_: ns,
-			Data_:      strconv.FormatInt(diskStat.RdBytes, 10),
+			Data_:      diskStat.RdBytes,
 			Timestamp_: time.Now(),
 		}, nil
 	}

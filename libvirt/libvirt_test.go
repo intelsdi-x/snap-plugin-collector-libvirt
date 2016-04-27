@@ -209,6 +209,8 @@ func TestLibirtPlugin(t *testing.T) {
 			collect, err := libvirtCol.CollectMetrics(metrics)
 			So(err, ShouldBeNil)
 			So(collect[0].Data_, ShouldNotBeNil)
+			var expectedType uint64
+			So(collect[0].Data_, ShouldHaveSameTypeAs, expectedType)
 			So(len(collect), ShouldResemble, 1)
 		})
 
