@@ -2,8 +2,8 @@ sudo: required
 language: go
 dist: trusty
 go:
-- 1.4.3
 - 1.5.3
+- 1.6
 env:
   global:
     - SNAP_PLUGIN_SOURCE=/home/travis/gopath/src/github.com/intelsdi-x/snap-plugin-collector-libvirt
