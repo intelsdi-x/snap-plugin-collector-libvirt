@@ -2,7 +2,7 @@
 http://www.apache.org/licenses/LICENSE-2.0.txt
 
 
-Copyright 2015 Intel Corporation
+Copyright 2015-2016 Intel Corporation
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -37,22 +37,22 @@ func cpuTimes(ns []string, dom libvirt.VirDomain) (*plugin.PluginMetricType, err
 		return nil, err
 	}
 	switch {
-	case regexp.MustCompile(`^/libvirt/.*/.*/cpu/cputime`).MatchString(joinNamespace(ns)):
+	case regexp.MustCompile(`^/libvirt/.*/cpu/cputime`).MatchString(joinNamespace(ns)):
 		cpuTime := info.GetCpuTime()
-		if ns[2] == "*" {
+		if ns[1] == "*" {
 			domainName, err := dom.GetName()
 			if err != nil {
 				return nil, err
 			}
-			ns[2] = domainName
+			ns[1] = domainName
 		}
 		return &plugin.PluginMetricType{
 			Namespace_: ns,
 			Data_:      cpuTime,
 			Timestamp_: time.Now(),
 		}, nil
-	case regexp.MustCompile(`^/libvirt/.*/.*/cpu/vcpu/.*/cputime`).MatchString(joinNamespace(ns)):
-		nr, err := strconv.Atoi(ns[5])
+	case regexp.MustCompile(`^/libvirt/.*/cpu/vcpu/.*/cputime`).MatchString(joinNamespace(ns)):
+		nr, err := strconv.Atoi(ns[4])
 		if err != nil {
 			return nil, err
 		}
@@ -84,7 +84,7 @@ func getVcpuTime(nr int, info libvirt.VirDomainInfo, dom libvirt.VirDomain) uint
 
 }
 
-func getCPUMetricTypes(dom libvirt.VirDomain, hostname string) ([]plugin.PluginMetricType, error) {
+func getCPUMetricTypes(dom libvirt.VirDomain) ([]plugin.PluginMetricType, error) {
 	var mts []plugin.PluginMetricType
 
 	domainname, err := dom.GetName()
@@ -101,10 +101,10 @@ func getCPUMetricTypes(dom libvirt.VirDomain, hostname string) ([]plugin.PluginM
 
 		for i = 0; i < info.GetNrVirtCpu(); i++ {
 
-			mts = append(mts, plugin.PluginMetricType{Namespace_: []string{"libvirt", hostname, domainname, "cpu", "vcpu", strconv.FormatUint(uint64(i), 10), metric}})
+			mts = append(mts, plugin.PluginMetricType{Namespace_: []string{"libvirt", domainname, "cpu", "vcpu", strconv.FormatUint(uint64(i), 10), metric}})
 
 		}
-		mts = append(mts, plugin.PluginMetricType{Namespace_: []string{"libvirt", hostname, domainname, "cpu", metric}})
+		mts = append(mts, plugin.PluginMetricType{Namespace_: []string{"libvirt", domainname, "cpu", metric}})
 	}
 	return mts, nil
 }

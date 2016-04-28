@@ -1,9 +1,6 @@
 {
 	"ImportPath": "github.com/intelsdi-x/snap-plugin-collector-libvirt",
-	"GoVersion": "go1.5",
-	"Packages": [
-		"./..."
-	],
+	"GoVersion": "go1.5.1",
 	"Deps": [
 		{
 			"ImportPath": "github.com/Sirupsen/logrus",
@@ -15,33 +12,29 @@
 			"Rev": "c41fbb0640f67e4fa19a915141fcae36d9226460"
 		},
 		{
-			"ImportPath": "github.com/gopherjs/gopherjs/js",
-			"Rev": "9e79153c1c8dfa135136342df1ee0e8588f6d0d5"
-		},
-		{
 			"ImportPath": "github.com/intelsdi-x/snap/control/plugin",
-			"Comment": "v0.11.0-beta",
-			"Rev": "42d9567651258bba268d94701eb171458e459645"
+			"Comment": "v0.13.0-beta",
+			"Rev": "ed2e620679f19950c660b3c44ce5a2f8e67eae17"
 		},
 		{
 			"ImportPath": "github.com/intelsdi-x/snap/core",
-			"Comment": "v0.11.0-beta",
-			"Rev": "42d9567651258bba268d94701eb171458e459645"
+			"Comment": "v0.13.0-beta",
+			"Rev": "ed2e620679f19950c660b3c44ce5a2f8e67eae17"
 		},
 		{
 			"ImportPath": "github.com/intelsdi-x/snap/pkg/ctree",
-			"Comment": "v0.11.0-beta",
-			"Rev": "42d9567651258bba268d94701eb171458e459645"
+			"Comment": "v0.13.0-beta",
+			"Rev": "ed2e620679f19950c660b3c44ce5a2f8e67eae17"
 		},
 		{
 			"ImportPath": "github.com/intelsdi-x/snap/pkg/schedule",
-			"Comment": "v0.11.0-beta",
-			"Rev": "42d9567651258bba268d94701eb171458e459645"
+			"Comment": "v0.13.0-beta",
+			"Rev": "ed2e620679f19950c660b3c44ce5a2f8e67eae17"
 		},
 		{
 			"ImportPath": "github.com/intelsdi-x/snap/scheduler/wmap",
-			"Comment": "v0.11.0-beta",
-			"Rev": "42d9567651258bba268d94701eb171458e459645"
+			"Comment": "v0.13.0-beta",
+			"Rev": "ed2e620679f19950c660b3c44ce5a2f8e67eae17"
 		},
 		{
 			"ImportPath": "github.com/jtolds/gls",
@@ -65,6 +58,10 @@
 		{
 			"ImportPath": "gopkg.in/yaml.v2",
 			"Rev": "f7716cbe52baa25d2e9b0d0da546fcf909fc16b4"
+		},
+		{
+			"ImportPath": "github.com/gopherjs/gopherjs/js",
+			"Rev": "9e79153c1c8dfa135136342df1ee0e8588f6d0d5"
 		}
 	]
 }

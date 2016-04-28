@@ -33,8 +33,8 @@ var diskMetricsTypes = []string{"wrreq", "rdreq", "wrbytes", "rdbytes"}
 
 func diskStat(ns []string, dom libvirt.VirDomain) (*plugin.PluginMetricType, error) {
 	switch {
-	case regexp.MustCompile(`^/libvirt/.*/.*/disk/.*/wrreq`).MatchString(joinNamespace(ns)):
-		disk := ns[4]
+	case regexp.MustCompile(`^/libvirt/.*/disk/.*/wrreq`).MatchString(joinNamespace(ns)):
+		disk := ns[3]
 		diskStat, err := dom.BlockStats(disk)
 		if err != nil {
 			return nil, err
@@ -44,8 +44,8 @@ func diskStat(ns []string, dom libvirt.VirDomain) (*plugin.PluginMetricType, err
 			Data_:      diskStat.WrReq,
 			Timestamp_: time.Now(),
 		}, nil
-	case regexp.MustCompile(`^/libvirt/.*/.*/disk/.*/rdreq`).MatchString(joinNamespace(ns)):
-		disk := ns[4]
+	case regexp.MustCompile(`^/libvirt/.*/disk/.*/rdreq`).MatchString(joinNamespace(ns)):
+		disk := ns[3]
 		diskStat, err := dom.BlockStats(disk)
 		if err != nil {
 			return nil, err
@@ -56,7 +56,7 @@ func diskStat(ns []string, dom libvirt.VirDomain) (*plugin.PluginMetricType, err
 			Timestamp_: time.Now(),
 		}, nil
 	case regexp.MustCompile(`^/libvirt/.*/.*/disk/.*/wrbytes`).MatchString(joinNamespace(ns)):
-		disk := ns[4]
+		disk := ns[3]
 		diskStat, err := dom.BlockStats(disk)
 		if err != nil {
 			return nil, err
@@ -66,8 +66,8 @@ func diskStat(ns []string, dom libvirt.VirDomain) (*plugin.PluginMetricType, err
 			Data_:      diskStat.WrBytes,
 			Timestamp_: time.Now(),
 		}, nil
-	case regexp.MustCompile(`^/libvirt/.*/.*/disk/.*/rdbytes`).MatchString(joinNamespace(ns)):
-		disk := ns[4]
+	case regexp.MustCompile(`^/libvirt/.*/disk/.*/rdbytes`).MatchString(joinNamespace(ns)):
+		disk := ns[3]
 		diskStat, err := dom.BlockStats(disk)
 		if err != nil {
 			return nil, err
@@ -93,7 +93,7 @@ func listDisks(domXML *etree.Document) []string {
 	return disks
 }
 
-func getDiskMetricTypes(dom libvirt.VirDomain, hostname string) ([]plugin.PluginMetricType, error) {
+func getDiskMetricTypes(dom libvirt.VirDomain) ([]plugin.PluginMetricType, error) {
 	var mts []plugin.PluginMetricType
 	domXMLDesc, err := dom.GetXMLDesc(0)
 	if err != nil {
@@ -111,7 +111,7 @@ func getDiskMetricTypes(dom libvirt.VirDomain, hostname string) ([]plugin.Plugin
 	for _, metric := range diskMetricsTypes {
 
 		for _, disk := range listDisks(domXML) {
-			mts = append(mts, plugin.PluginMetricType{Namespace_: []string{"libvirt", hostname, domainname, "disk", disk, metric}})
+			mts = append(mts, plugin.PluginMetricType{Namespace_: []string{"libvirt", domainname, "disk", disk, metric}})
 
 		}
 	}

@@ -4,7 +4,7 @@
 /*
 http://www.apache.org/licenses/LICENSE-2.0.txt
 
-Copyright 2015 Intel Corporation
+Copyright 2015-2016 Intel Corporation
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -32,10 +32,9 @@ import (
 func TestLibirtPluginCpu(t *testing.T) {
 	Convey("Collect cpu Metrics", t, func() {
 		conn, _ := libvirt.NewVirConnection("test:///default")
-		hostname, _ := conn.GetHostname()
-		namespace := []string{"libvirt", hostname, "test", "cpu", "cputime"}
-		namespace2 := []string{"libvirt", hostname, "test", "cpu", "vcpu", "0", "cputime"}
-		namespace3 := []string{"libvirt", hostname, "test", "cpu", "0", "cputime", "bad"}
+		namespace := []string{"libvirt", "test", "cpu", "cputime"}
+		namespace2 := []string{"libvirt", "test", "cpu", "vcpu", "0", "cputime"}
+		namespace3 := []string{"libvirt", "test", "cpu", "0", "cputime", "bad"}
 		dom, err := conn.LookupDomainByName("test")
 		metric, err := cpuTimes(namespace, dom)
 		So(err, ShouldBeNil)
@@ -54,7 +53,7 @@ func TestLibirtPluginCpu(t *testing.T) {
 		Convey("Join namespace ", func() {
 			dom, _ := conn.LookupDomainByName(hostname)
 			So(dom, ShouldNotBeNil)
-			cpuTypes, err := getCPUMetricTypes(dom, "test")
+			cpuTypes, err := getCPUMetricTypes(dom)
 			So(err, ShouldBeNil)
 			So(3, ShouldResemble, len(cpuTypes))
 		})

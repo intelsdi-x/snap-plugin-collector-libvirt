@@ -2,7 +2,7 @@
 http://www.apache.org/licenses/LICENSE-2.0.txt
 
 
-Copyright 2015 Intel Corporation
+Copyright 2015-2016 Intel Corporation
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ const (
 	// Name of plugin
 	Name = "libvirt"
 	// Version of plugin
-	Version = 5
+	Version = 6
 	// Type of plugin
 	Type = plugin.CollectorPluginType
 )
@@ -59,6 +59,15 @@ func NewLibvirtCollector() *Libvirt {
 
 func joinNamespace(ns []string) string {
 	return "/" + strings.Join(ns, "/")
+}
+
+func addTags(hostname string, domainname string) map[string]string {
+	var tags map[string]string
+	tags = make(map[string]string)
+	tags["hostname"] = hostname
+	tags["domainame"] = domainname
+	return tags
+
 }
 
 // CollectMetrics returns collected metrics
@@ -91,7 +100,13 @@ func (p *Libvirt) CollectMetrics(mts []plugin.PluginMetricType) ([]plugin.Plugin
 				if err != nil {
 					return metrics, err
 				}
-				metric.Source_, _ = conn.GetHostname()
+				hostname, err := conn.GetHostname()
+				if err != nil {
+					return metrics, err
+				}
+				domainname := p.Namespace()[1]
+				metric.Tags_ = addTags(hostname, domainname)
+				metric.Source_ = domainname
 				metrics = append(metrics, metric)
 
 			}
@@ -107,10 +122,13 @@ func (p *Libvirt) CollectMetrics(mts []plugin.PluginMetricType) ([]plugin.Plugin
 			}
 			defer dom.Free()
 			metric, err := processMetric(ns, dom, p)
-			metric.Source_, _ = conn.GetHostname()
+			hostname, err := conn.GetHostname()
 			if err != nil {
 				return metrics, err
 			}
+			domainname := p.Namespace()[1]
+			metric.Tags_ = addTags(hostname, domainname)
+			metric.Source_ = domainname
 			metrics = append(metrics, metric)
 		}
 
@@ -119,10 +137,10 @@ func (p *Libvirt) CollectMetrics(mts []plugin.PluginMetricType) ([]plugin.Plugin
 }
 
 func processMetric(ns string, dom libvirt.VirDomain, p plugin.PluginMetricType) (plugin.PluginMetricType, error) {
-	cpure := regexp.MustCompile(`^/libvirt/.*/.*/cpu/.*`)
-	memre := regexp.MustCompile(`^/libvirt/.*/.*/mem/.*`)
-	netre := regexp.MustCompile(`^/libvirt/.*/.*/net/.*`)
-	diskre := regexp.MustCompile(`^/libvirt/.*/.*/disk/.*`)
+	cpure := regexp.MustCompile(`^/libvirt/.*/cpu/.*`)
+	memre := regexp.MustCompile(`^/libvirt/.*/mem/.*`)
+	netre := regexp.MustCompile(`^/libvirt/.*/net/.*`)
+	diskre := regexp.MustCompile(`^/libvirt/.*/disk/.*`)
 
 	switch {
 	case memre.MatchString(ns):
@@ -176,11 +194,6 @@ func (p *Libvirt) GetMetricTypes(cfg plugin.PluginConfigType) ([]plugin.PluginMe
 		handleErr(err)
 	}
 
-	hostname, err := conn.GetHostname()
-	if err != nil {
-		handleErr(err)
-	}
-
 	defer conn.CloseConnection()
 	for j := 0; j < domainCount(domains); j++ {
 		dom, err := conn.LookupDomainById(domains[j])
@@ -189,32 +202,32 @@ func (p *Libvirt) GetMetricTypes(cfg plugin.PluginConfigType) ([]plugin.PluginMe
 		}
 		defer dom.Free()
 
-		netMts, err := getNetMetricTypes(dom, hostname)
+		netMts, err := getNetMetricTypes(dom)
 		if err != nil {
 			handleErr(err)
 		}
 		metrics = append(metrics, netMts...)
-		cpuMts, err := getCPUMetricTypes(dom, hostname)
+		cpuMts, err := getCPUMetricTypes(dom)
 		if err != nil {
 			handleErr(err)
 		}
 		metrics = append(metrics, cpuMts...)
-		memMts, err := getMemMetricTypes(dom, hostname)
+		memMts, err := getMemMetricTypes(dom)
 		if err != nil {
 			handleErr(err)
 		}
 		metrics = append(metrics, memMts...)
-		diskMts, err := getDiskMetricTypes(dom, hostname)
+		diskMts, err := getDiskMetricTypes(dom)
 		if err != nil {
 			handleErr(err)
 		}
 		metrics = append(metrics, diskMts...)
 	}
 	for _, metric := range cpuMetricsTypes {
-		metrics = append(metrics, plugin.PluginMetricType{Namespace_: []string{"libvirt", hostname, "*", "cpu", metric}})
+		metrics = append(metrics, plugin.PluginMetricType{Namespace_: []string{"libvirt", "*", "cpu", metric}})
 	}
 	for _, metric := range memoryMetricsTypes {
-		metrics = append(metrics, plugin.PluginMetricType{Namespace_: []string{"libvirt", hostname, "*", "mem", metric}})
+		metrics = append(metrics, plugin.PluginMetricType{Namespace_: []string{"libvirt", "*", "mem", metric}})
 	}
 	return metrics, nil
 }
@@ -224,7 +237,7 @@ func domainCount(domains []uint32) int {
 }
 func namespacetoDomain(namespace []string) (string, error) {
 	if len(namespace) > 2 {
-		return namespace[2], nil
+		return namespace[1], nil
 	}
 	return "", fmt.Errorf("Namespace is too short")
 
