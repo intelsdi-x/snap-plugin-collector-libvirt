@@ -26,12 +26,13 @@ import (
 
 	"github.com/beevik/etree"
 	"github.com/intelsdi-x/snap/control/plugin"
+	"github.com/intelsdi-x/snap/core"
 	"github.com/sandlbn/libvirt-go"
 )
 
 var diskMetricsTypes = []string{"wrreq", "rdreq", "wrbytes", "rdbytes"}
 
-func diskStat(ns []string, dom libvirt.VirDomain) (*plugin.PluginMetricType, error) {
+func diskStat(ns []string, dom libvirt.VirDomain) (*plugin.MetricType, error) {
 	switch {
 	case regexp.MustCompile(`^/libvirt/.*/disk/.*/wrreq`).MatchString(joinNamespace(ns)):
 		disk := ns[3]
@@ -39,8 +40,8 @@ func diskStat(ns []string, dom libvirt.VirDomain) (*plugin.PluginMetricType, err
 		if err != nil {
 			return nil, err
 		}
-		return &plugin.PluginMetricType{
-			Namespace_: ns,
+		return &plugin.MetricType{
+			Namespace_: core.NewNamespace(ns...),
 			Data_:      diskStat.WrReq,
 			Timestamp_: time.Now(),
 		}, nil
@@ -50,8 +51,8 @@ func diskStat(ns []string, dom libvirt.VirDomain) (*plugin.PluginMetricType, err
 		if err != nil {
 			return nil, err
 		}
-		return &plugin.PluginMetricType{
-			Namespace_: ns,
+		return &plugin.MetricType{
+			Namespace_: core.NewNamespace(ns...),
 			Data_:      diskStat.RdReq,
 			Timestamp_: time.Now(),
 		}, nil
@@ -61,8 +62,8 @@ func diskStat(ns []string, dom libvirt.VirDomain) (*plugin.PluginMetricType, err
 		if err != nil {
 			return nil, err
 		}
-		return &plugin.PluginMetricType{
-			Namespace_: ns,
+		return &plugin.MetricType{
+			Namespace_: core.NewNamespace(ns...),
 			Data_:      diskStat.WrBytes,
 			Timestamp_: time.Now(),
 		}, nil
@@ -72,8 +73,8 @@ func diskStat(ns []string, dom libvirt.VirDomain) (*plugin.PluginMetricType, err
 		if err != nil {
 			return nil, err
 		}
-		return &plugin.PluginMetricType{
-			Namespace_: ns,
+		return &plugin.MetricType{
+			Namespace_: core.NewNamespace(ns...),
 			Data_:      diskStat.RdBytes,
 			Timestamp_: time.Now(),
 		}, nil
@@ -93,8 +94,8 @@ func listDisks(domXML *etree.Document) []string {
 	return disks
 }
 
-func getDiskMetricTypes(dom libvirt.VirDomain) ([]plugin.PluginMetricType, error) {
-	var mts []plugin.PluginMetricType
+func getDiskMetricTypes(dom libvirt.VirDomain) ([]plugin.MetricType, error) {
+	var mts []plugin.MetricType
 	domXMLDesc, err := dom.GetXMLDesc(0)
 	if err != nil {
 		return nil, err
@@ -111,7 +112,7 @@ func getDiskMetricTypes(dom libvirt.VirDomain) ([]plugin.PluginMetricType, error
 	for _, metric := range diskMetricsTypes {
 
 		for _, disk := range listDisks(domXML) {
-			mts = append(mts, plugin.PluginMetricType{Namespace_: []string{"libvirt", domainname, "disk", disk, metric}})
+			mts = append(mts, plugin.MetricType{Namespace_: core.NewNamespace("libvirt", domainname, "disk", disk, metric)})
 
 		}
 	}

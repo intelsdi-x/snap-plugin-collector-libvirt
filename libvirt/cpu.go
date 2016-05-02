@@ -26,12 +26,13 @@ import (
 	"time"
 
 	"github.com/intelsdi-x/snap/control/plugin"
+	"github.com/intelsdi-x/snap/core"
 	"github.com/sandlbn/libvirt-go"
 )
 
 var cpuMetricsTypes = []string{"cputime"}
 
-func cpuTimes(ns []string, dom libvirt.VirDomain) (*plugin.PluginMetricType, error) {
+func cpuTimes(ns []string, dom libvirt.VirDomain) (*plugin.MetricType, error) {
 	info, err := dom.GetInfo()
 	if err != nil {
 		return nil, err
@@ -46,8 +47,8 @@ func cpuTimes(ns []string, dom libvirt.VirDomain) (*plugin.PluginMetricType, err
 			}
 			ns[1] = domainName
 		}
-		return &plugin.PluginMetricType{
-			Namespace_: ns,
+		return &plugin.MetricType{
+			Namespace_: core.NewNamespace(ns...),
 			Data_:      cpuTime,
 			Timestamp_: time.Now(),
 		}, nil
@@ -59,8 +60,8 @@ func cpuTimes(ns []string, dom libvirt.VirDomain) (*plugin.PluginMetricType, err
 		metric := getVcpuTime(nr, info, dom)
 
 		cpuTime := metric
-		return &plugin.PluginMetricType{
-			Namespace_: ns,
+		return &plugin.MetricType{
+			Namespace_: core.NewNamespace(ns...),
 			Data_:      cpuTime,
 			Timestamp_: time.Now(),
 		}, nil
@@ -84,8 +85,8 @@ func getVcpuTime(nr int, info libvirt.VirDomainInfo, dom libvirt.VirDomain) uint
 
 }
 
-func getCPUMetricTypes(dom libvirt.VirDomain) ([]plugin.PluginMetricType, error) {
-	var mts []plugin.PluginMetricType
+func getCPUMetricTypes(dom libvirt.VirDomain) ([]plugin.MetricType, error) {
+	var mts []plugin.MetricType
 
 	domainname, err := dom.GetName()
 	if err != nil {
@@ -101,10 +102,10 @@ func getCPUMetricTypes(dom libvirt.VirDomain) ([]plugin.PluginMetricType, error)
 
 		for i = 0; i < info.GetNrVirtCpu(); i++ {
 
-			mts = append(mts, plugin.PluginMetricType{Namespace_: []string{"libvirt", domainname, "cpu", "vcpu", strconv.FormatUint(uint64(i), 10), metric}})
+			mts = append(mts, plugin.MetricType{Namespace_: core.NewNamespace("libvirt", domainname, "cpu", "vcpu", strconv.FormatUint(uint64(i), 10), metric)})
 
 		}
-		mts = append(mts, plugin.PluginMetricType{Namespace_: []string{"libvirt", domainname, "cpu", metric}})
+		mts = append(mts, plugin.MetricType{Namespace_: core.NewNamespace("libvirt", domainname, "cpu", metric)})
 	}
 	return mts, nil
 }
