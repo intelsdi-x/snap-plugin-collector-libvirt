@@ -1,44 +1,86 @@
 {
 	"ImportPath": "github.com/intelsdi-x/snap-plugin-collector-libvirt",
-	"GoVersion": "go1.5.1",
+	"GoVersion": "go1.6",
+	"GodepVersion": "v62",
 	"Deps": [
 		{
 			"ImportPath": "github.com/Sirupsen/logrus",
-			"Comment": "v0.7.3",
-			"Rev": "55eb11d21d2a31a3cc93838241d04800f52e823d"
+			"Comment": "v0.10.0-16-gcd7d1bb",
+			"Rev": "cd7d1bbe41066b6c1f19780f895901052150a575"
 		},
 		{
 			"ImportPath": "github.com/beevik/etree",
-			"Rev": "c41fbb0640f67e4fa19a915141fcae36d9226460"
+			"Rev": "4e6fd8a0164883e3ebe01e31c3d3e0d8f21814a7"
+		},
+		{
+			"ImportPath": "github.com/gopherjs/gopherjs/js",
+			"Comment": "go1.5-50-g028c56b",
+			"Rev": "028c56b1a74aa0b24f8861f78bceafa5bbcd3eb8"
 		},
 		{
 			"ImportPath": "github.com/intelsdi-x/snap/control/plugin",
-			"Comment": "v0.13.0-beta",
-			"Rev": "ed2e620679f19950c660b3c44ce5a2f8e67eae17"
+			"Comment": "v0.13.0-beta-67-g891c09f",
+			"Rev": "891c09fd7e93aaf7cc0fb976fb91407901fd3843"
+		},
+		{
+			"ImportPath": "github.com/intelsdi-x/snap/control/plugin/cpolicy",
+			"Comment": "v0.13.0-beta-67-g891c09f",
+			"Rev": "891c09fd7e93aaf7cc0fb976fb91407901fd3843"
+		},
+		{
+			"ImportPath": "github.com/intelsdi-x/snap/control/plugin/encoding",
+			"Comment": "v0.13.0-beta-67-g891c09f",
+			"Rev": "891c09fd7e93aaf7cc0fb976fb91407901fd3843"
+		},
+		{
+			"ImportPath": "github.com/intelsdi-x/snap/control/plugin/encrypter",
+			"Comment": "v0.13.0-beta-67-g891c09f",
+			"Rev": "891c09fd7e93aaf7cc0fb976fb91407901fd3843"
 		},
 		{
 			"ImportPath": "github.com/intelsdi-x/snap/core",
-			"Comment": "v0.13.0-beta",
-			"Rev": "ed2e620679f19950c660b3c44ce5a2f8e67eae17"
+			"Comment": "v0.13.0-beta-67-g891c09f",
+			"Rev": "891c09fd7e93aaf7cc0fb976fb91407901fd3843"
+		},
+		{
+			"ImportPath": "github.com/intelsdi-x/snap/core/cdata",
+			"Comment": "v0.13.0-beta-67-g891c09f",
+			"Rev": "891c09fd7e93aaf7cc0fb976fb91407901fd3843"
+		},
+		{
+			"ImportPath": "github.com/intelsdi-x/snap/core/ctypes",
+			"Comment": "v0.13.0-beta-67-g891c09f",
+			"Rev": "891c09fd7e93aaf7cc0fb976fb91407901fd3843"
+		},
+		{
+			"ImportPath": "github.com/intelsdi-x/snap/core/serror",
+			"Comment": "v0.13.0-beta-67-g891c09f",
+			"Rev": "891c09fd7e93aaf7cc0fb976fb91407901fd3843"
 		},
 		{
 			"ImportPath": "github.com/intelsdi-x/snap/pkg/ctree",
-			"Comment": "v0.13.0-beta",
-			"Rev": "ed2e620679f19950c660b3c44ce5a2f8e67eae17"
+			"Comment": "v0.13.0-beta-67-g891c09f",
+			"Rev": "891c09fd7e93aaf7cc0fb976fb91407901fd3843"
 		},
 		{
 			"ImportPath": "github.com/intelsdi-x/snap/pkg/schedule",
-			"Comment": "v0.13.0-beta",
-			"Rev": "ed2e620679f19950c660b3c44ce5a2f8e67eae17"
+			"Comment": "v0.13.0-beta-67-g891c09f",
+			"Rev": "891c09fd7e93aaf7cc0fb976fb91407901fd3843"
 		},
 		{
 			"ImportPath": "github.com/intelsdi-x/snap/scheduler/wmap",
-			"Comment": "v0.13.0-beta",
-			"Rev": "ed2e620679f19950c660b3c44ce5a2f8e67eae17"
+			"Comment": "v0.13.0-beta-67-g891c09f",
+			"Rev": "891c09fd7e93aaf7cc0fb976fb91407901fd3843"
 		},
 		{
 			"ImportPath": "github.com/jtolds/gls",
+			"Comment": "v4.2.0",
 			"Rev": "8ddce2a84170772b95dd5d576c48d517b22cac63"
+		},
+		{
+			"ImportPath": "github.com/robfig/cron",
+			"Comment": "v1-16-g0f39cf7",
+			"Rev": "0f39cf7ebc65a602f45692f9894bd6a193faf8fa"
 		},
 		{
 			"ImportPath": "github.com/sandlbn/libvirt-go",
@@ -47,21 +89,41 @@
 		},
 		{
 			"ImportPath": "github.com/smartystreets/assertions",
-			"Comment": "1.5.0-409-g5de9043",
-			"Rev": "5de9043ec1a39cc97edc838ef7236538a55b30a4"
+			"Comment": "1.6.0-6-g40711f7",
+			"Rev": "40711f7748186bbf9c99977cd89f21ce1a229447"
+		},
+		{
+			"ImportPath": "github.com/smartystreets/assertions/internal/go-render/render",
+			"Comment": "1.6.0-6-g40711f7",
+			"Rev": "40711f7748186bbf9c99977cd89f21ce1a229447"
+		},
+		{
+			"ImportPath": "github.com/smartystreets/assertions/internal/oglematchers",
+			"Comment": "1.6.0-6-g40711f7",
+			"Rev": "40711f7748186bbf9c99977cd89f21ce1a229447"
 		},
 		{
 			"ImportPath": "github.com/smartystreets/goconvey/convey",
-			"Comment": "1.6.0-10-g995f5b2",
-			"Rev": "995f5b2e021c69b8b028ba6d0b05c1dd500783db"
+			"Comment": "1.6.1-20-gcc5d85f",
+			"Rev": "cc5d85f4f15bd2163abf0fe6e6753356dde72aa2"
+		},
+		{
+			"ImportPath": "github.com/smartystreets/goconvey/convey/gotest",
+			"Comment": "1.6.1-20-gcc5d85f",
+			"Rev": "cc5d85f4f15bd2163abf0fe6e6753356dde72aa2"
+		},
+		{
+			"ImportPath": "github.com/smartystreets/goconvey/convey/reporting",
+			"Comment": "1.6.1-20-gcc5d85f",
+			"Rev": "cc5d85f4f15bd2163abf0fe6e6753356dde72aa2"
+		},
+		{
+			"ImportPath": "golang.org/x/sys/unix",
+			"Rev": "b776ec39b3e54652e09028aaaaac9757f4f8211a"
 		},
 		{
 			"ImportPath": "gopkg.in/yaml.v2",
-			"Rev": "f7716cbe52baa25d2e9b0d0da546fcf909fc16b4"
-		},
-		{
-			"ImportPath": "github.com/gopherjs/gopherjs/js",
-			"Rev": "9e79153c1c8dfa135136342df1ee0e8588f6d0d5"
+			"Rev": "a83829b6f1293c91addabc89d0571c246397bbf4"
 		}
 	]
 }

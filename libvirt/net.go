@@ -26,13 +26,14 @@ import (
 
 	"github.com/beevik/etree"
 	"github.com/intelsdi-x/snap/control/plugin"
+	"github.com/intelsdi-x/snap/core"
 	"github.com/sandlbn/libvirt-go"
 )
 
 var netMetricsTypes = []string{"rxbytes", "rxpackets", "rxerrs", "rxdrop",
 	"txbytes", "txpackets", "txerrs", "txdrop"}
 
-func interfaceStat(ns []string, dom libvirt.VirDomain) (*plugin.PluginMetricType, error) {
+func interfaceStat(ns []string, dom libvirt.VirDomain) (*plugin.MetricType, error) {
 	switch {
 	case regexp.MustCompile(`^/libvirt/.*/net/.*/rxbytes`).MatchString(joinNamespace(ns)):
 		iface := ns[3]
@@ -40,8 +41,8 @@ func interfaceStat(ns []string, dom libvirt.VirDomain) (*plugin.PluginMetricType
 		if err != nil {
 			return nil, err
 		}
-		return &plugin.PluginMetricType{
-			Namespace_: ns,
+		return &plugin.MetricType{
+			Namespace_: core.NewNamespace(ns...),
 			Data_:      ifaceStat.RxBytes,
 			Timestamp_: time.Now(),
 		}, nil
@@ -51,8 +52,8 @@ func interfaceStat(ns []string, dom libvirt.VirDomain) (*plugin.PluginMetricType
 		if err != nil {
 			return nil, err
 		}
-		return &plugin.PluginMetricType{
-			Namespace_: ns,
+		return &plugin.MetricType{
+			Namespace_: core.NewNamespace(ns...),
 			Data_:      ifaceStat.RxPackets,
 			Timestamp_: time.Now(),
 		}, nil
@@ -62,8 +63,8 @@ func interfaceStat(ns []string, dom libvirt.VirDomain) (*plugin.PluginMetricType
 		if err != nil {
 			return nil, err
 		}
-		return &plugin.PluginMetricType{
-			Namespace_: ns,
+		return &plugin.MetricType{
+			Namespace_: core.NewNamespace(ns...),
 			Data_:      ifaceStat.RxErrs,
 			Timestamp_: time.Now(),
 		}, nil
@@ -73,8 +74,8 @@ func interfaceStat(ns []string, dom libvirt.VirDomain) (*plugin.PluginMetricType
 		if err != nil {
 			return nil, err
 		}
-		return &plugin.PluginMetricType{
-			Namespace_: ns,
+		return &plugin.MetricType{
+			Namespace_: core.NewNamespace(ns...),
 			Data_:      ifaceStat.RxDrop,
 			Timestamp_: time.Now(),
 		}, nil
@@ -84,8 +85,8 @@ func interfaceStat(ns []string, dom libvirt.VirDomain) (*plugin.PluginMetricType
 		if err != nil {
 			return nil, err
 		}
-		return &plugin.PluginMetricType{
-			Namespace_: ns,
+		return &plugin.MetricType{
+			Namespace_: core.NewNamespace(ns...),
 			Data_:      ifaceStat.TxBytes,
 			Timestamp_: time.Now(),
 		}, nil
@@ -95,8 +96,8 @@ func interfaceStat(ns []string, dom libvirt.VirDomain) (*plugin.PluginMetricType
 		if err != nil {
 			return nil, err
 		}
-		return &plugin.PluginMetricType{
-			Namespace_: ns,
+		return &plugin.MetricType{
+			Namespace_: core.NewNamespace(ns...),
 			Data_:      ifaceStat.TxPackets,
 			Timestamp_: time.Now(),
 		}, nil
@@ -106,8 +107,8 @@ func interfaceStat(ns []string, dom libvirt.VirDomain) (*plugin.PluginMetricType
 		if err != nil {
 			fmt.Println(err)
 		}
-		return &plugin.PluginMetricType{
-			Namespace_: ns,
+		return &plugin.MetricType{
+			Namespace_: core.NewNamespace(ns...),
 			Data_:      ifaceStat.TxErrs,
 			Timestamp_: time.Now(),
 		}, nil
@@ -117,8 +118,8 @@ func interfaceStat(ns []string, dom libvirt.VirDomain) (*plugin.PluginMetricType
 		if err != nil {
 			return nil, err
 		}
-		return &plugin.PluginMetricType{
-			Namespace_: ns,
+		return &plugin.MetricType{
+			Namespace_: core.NewNamespace(ns...),
 			Data_:      ifaceStat.RxDrop,
 			Timestamp_: time.Now(),
 		}, nil
@@ -137,8 +138,8 @@ func listInterfaces(domXML *etree.Document) []string {
 	return networkInterfaces
 }
 
-func getNetMetricTypes(dom libvirt.VirDomain) ([]plugin.PluginMetricType, error) {
-	var mts []plugin.PluginMetricType
+func getNetMetricTypes(dom libvirt.VirDomain) ([]plugin.MetricType, error) {
+	var mts []plugin.MetricType
 	domXMLDesc, err := dom.GetXMLDesc(0)
 	if err != nil {
 		return nil, err
@@ -153,8 +154,8 @@ func getNetMetricTypes(dom libvirt.VirDomain) ([]plugin.PluginMetricType, error)
 
 	for _, metric := range netMetricsTypes {
 
-		for _, netInteface := range listInterfaces(domXML) {
-			mts = append(mts, plugin.PluginMetricType{Namespace_: []string{"libvirt", domainname, "net", netInteface, metric}})
+		for _, netInterface := range listInterfaces(domXML) {
+			mts = append(mts, plugin.MetricType{Namespace_: core.NewNamespace("libvirt", domainname, "net", netInterface, metric)})
 
 		}
 	}

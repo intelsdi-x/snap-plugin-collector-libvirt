@@ -25,13 +25,14 @@ import (
 	"time"
 
 	"github.com/intelsdi-x/snap/control/plugin"
+	"github.com/intelsdi-x/snap/core"
 	"github.com/sandlbn/libvirt-go"
 )
 
 var memoryMetricsTypes = []string{"mem", "max", "swap_in", "swap_out", "major_fault",
 	"min_fault", "unused", "available", "actual_balloon", "rss", "nr"}
 
-func memStat(ns []string, dom libvirt.VirDomain) (*plugin.PluginMetricType, error) {
+func memStat(ns []string, dom libvirt.VirDomain) (*plugin.MetricType, error) {
 	info, err := dom.GetInfo()
 	if err != nil {
 		return nil, err
@@ -47,15 +48,15 @@ func memStat(ns []string, dom libvirt.VirDomain) (*plugin.PluginMetricType, erro
 	switch {
 	case regexp.MustCompile(`^/libvirt/.*/mem/mem`).MatchString(joinNamespace(ns)):
 		memory := info.GetMemory()
-		return &plugin.PluginMetricType{
-			Namespace_: ns,
+		return &plugin.MetricType{
+			Namespace_: core.NewNamespace(ns...),
 			Data_:      memory,
 			Timestamp_: time.Now(),
 		}, nil
 	case regexp.MustCompile(`^/libvirt/.*/mem/max`).MatchString(joinNamespace(ns)):
 		memory := info.GetMaxMem()
-		return &plugin.PluginMetricType{
-			Namespace_: ns,
+		return &plugin.MetricType{
+			Namespace_: core.NewNamespace(ns...),
 			Data_:      memory,
 			Timestamp_: time.Now(),
 		}, nil
@@ -65,8 +66,8 @@ func memStat(ns []string, dom libvirt.VirDomain) (*plugin.PluginMetricType, erro
 			return nil, err
 		}
 		memory := swapIn
-		return &plugin.PluginMetricType{
-			Namespace_: ns,
+		return &plugin.MetricType{
+			Namespace_: core.NewNamespace(ns...),
 			Data_:      memory,
 			Timestamp_: time.Now(),
 		}, nil
@@ -76,8 +77,8 @@ func memStat(ns []string, dom libvirt.VirDomain) (*plugin.PluginMetricType, erro
 			return nil, err
 		}
 		memory := swapOut
-		return &plugin.PluginMetricType{
-			Namespace_: ns,
+		return &plugin.MetricType{
+			Namespace_: core.NewNamespace(ns...),
 			Data_:      memory,
 			Timestamp_: time.Now(),
 		}, nil
@@ -87,8 +88,8 @@ func memStat(ns []string, dom libvirt.VirDomain) (*plugin.PluginMetricType, erro
 			return nil, err
 		}
 		memory := minFault
-		return &plugin.PluginMetricType{
-			Namespace_: ns,
+		return &plugin.MetricType{
+			Namespace_: core.NewNamespace(ns...),
 			Data_:      memory,
 			Timestamp_: time.Now(),
 		}, nil
@@ -98,8 +99,8 @@ func memStat(ns []string, dom libvirt.VirDomain) (*plugin.PluginMetricType, erro
 			return nil, err
 		}
 		memory := majorFault
-		return &plugin.PluginMetricType{
-			Namespace_: ns,
+		return &plugin.MetricType{
+			Namespace_: core.NewNamespace(ns...),
 			Data_:      memory,
 			Timestamp_: time.Now(),
 		}, nil
@@ -109,8 +110,8 @@ func memStat(ns []string, dom libvirt.VirDomain) (*plugin.PluginMetricType, erro
 			return nil, err
 		}
 		memory := unused
-		return &plugin.PluginMetricType{
-			Namespace_: ns,
+		return &plugin.MetricType{
+			Namespace_: core.NewNamespace(ns...),
 			Data_:      memory,
 			Timestamp_: time.Now(),
 		}, nil
@@ -120,8 +121,8 @@ func memStat(ns []string, dom libvirt.VirDomain) (*plugin.PluginMetricType, erro
 			return nil, err
 		}
 		memory := available
-		return &plugin.PluginMetricType{
-			Namespace_: ns,
+		return &plugin.MetricType{
+			Namespace_: core.NewNamespace(ns...),
 			Data_:      memory,
 			Timestamp_: time.Now(),
 		}, nil
@@ -131,8 +132,8 @@ func memStat(ns []string, dom libvirt.VirDomain) (*plugin.PluginMetricType, erro
 			return nil, err
 		}
 		memory := actualBalloon
-		return &plugin.PluginMetricType{
-			Namespace_: ns,
+		return &plugin.MetricType{
+			Namespace_: core.NewNamespace(ns...),
 			Data_:      memory,
 			Timestamp_: time.Now(),
 		}, nil
@@ -142,8 +143,8 @@ func memStat(ns []string, dom libvirt.VirDomain) (*plugin.PluginMetricType, erro
 			return nil, err
 		}
 		memory := rss
-		return &plugin.PluginMetricType{
-			Namespace_: ns,
+		return &plugin.MetricType{
+			Namespace_: core.NewNamespace(ns...),
 			Data_:      memory,
 			Timestamp_: time.Now(),
 		}, nil
@@ -153,8 +154,8 @@ func memStat(ns []string, dom libvirt.VirDomain) (*plugin.PluginMetricType, erro
 			return nil, err
 		}
 		memory := nr
-		return &plugin.PluginMetricType{
-			Namespace_: ns,
+		return &plugin.MetricType{
+			Namespace_: core.NewNamespace(ns...),
 			Data_:      memory,
 			Timestamp_: time.Now(),
 		}, nil
@@ -203,8 +204,8 @@ func parseMemStats(memstat []libvirt.VirDomainMemoryStat, nr int32) uint64 {
 	return metric
 
 }
-func getMemMetricTypes(dom libvirt.VirDomain) ([]plugin.PluginMetricType, error) {
-	var mts []plugin.PluginMetricType
+func getMemMetricTypes(dom libvirt.VirDomain) ([]plugin.MetricType, error) {
+	var mts []plugin.MetricType
 
 	domainname, err := dom.GetName()
 	if err != nil {
@@ -213,7 +214,7 @@ func getMemMetricTypes(dom libvirt.VirDomain) ([]plugin.PluginMetricType, error)
 
 	for _, metric := range memoryMetricsTypes {
 
-		mts = append(mts, plugin.PluginMetricType{Namespace_: []string{"libvirt", domainname, "mem", metric}})
+		mts = append(mts, plugin.MetricType{Namespace_: core.NewNamespace("libvirt", domainname, "mem", metric)})
 	}
 	return mts, nil
 }

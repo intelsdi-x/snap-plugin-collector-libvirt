@@ -26,6 +26,7 @@ import (
 
 	"github.com/intelsdi-x/snap/control/plugin"
 	"github.com/intelsdi-x/snap/control/plugin/cpolicy"
+	"github.com/intelsdi-x/snap/core"
 	"github.com/intelsdi-x/snap/core/ctypes"
 	"github.com/sandlbn/libvirt-go"
 )
@@ -34,7 +35,7 @@ const (
 	// Name of plugin
 	Name = "libvirt"
 	// Version of plugin
-	Version = 6
+	Version = 7
 	// Type of plugin
 	Type = plugin.CollectorPluginType
 )
@@ -71,8 +72,8 @@ func addTags(hostname string, domainname string) map[string]string {
 }
 
 // CollectMetrics returns collected metrics
-func (p *Libvirt) CollectMetrics(mts []plugin.PluginMetricType) ([]plugin.PluginMetricType, error) {
-	metrics := []plugin.PluginMetricType{}
+func (p *Libvirt) CollectMetrics(mts []plugin.MetricType) ([]plugin.MetricType, error) {
+	metrics := []plugin.MetricType{}
 	conn, err := libvirt.NewVirConnection(getHypervisorURI(mts[0].Config().Table()))
 
 	if err != nil {
@@ -82,10 +83,8 @@ func (p *Libvirt) CollectMetrics(mts []plugin.PluginMetricType) ([]plugin.Plugin
 
 	for _, p := range mts {
 
-		ns := joinNamespace(p.Namespace())
-		if string(p.Namespace()[2]) == "*" {
-			nscopy := make([]string, len(p.Namespace()))
-			copy(nscopy, p.Namespace())
+		ns := p.Namespace().String()
+		if string(p.Namespace().Strings()[1]) == "*" {
 			domains, err := conn.ListDomains()
 			if err != nil {
 				return metrics, err
@@ -105,14 +104,13 @@ func (p *Libvirt) CollectMetrics(mts []plugin.PluginMetricType) ([]plugin.Plugin
 					return metrics, err
 				}
 				domainname := p.Namespace()[1]
-				metric.Tags_ = addTags(hostname, domainname)
-				metric.Source_ = domainname
+				metric.Tags_ = addTags(hostname, domainname.Value)
 				metrics = append(metrics, metric)
 
 			}
 		} else {
 
-			domainName, err := namespacetoDomain(p.Namespace())
+			domainName, err := namespacetoDomain(p.Namespace().Strings())
 			if err != nil {
 				return nil, err
 			}
@@ -127,8 +125,7 @@ func (p *Libvirt) CollectMetrics(mts []plugin.PluginMetricType) ([]plugin.Plugin
 				return metrics, err
 			}
 			domainname := p.Namespace()[1]
-			metric.Tags_ = addTags(hostname, domainname)
-			metric.Source_ = domainname
+			metric.Tags_ = addTags(hostname, domainname.Value)
 			metrics = append(metrics, metric)
 		}
 
@@ -136,7 +133,7 @@ func (p *Libvirt) CollectMetrics(mts []plugin.PluginMetricType) ([]plugin.Plugin
 	return metrics, err
 }
 
-func processMetric(ns string, dom libvirt.VirDomain, p plugin.PluginMetricType) (plugin.PluginMetricType, error) {
+func processMetric(ns string, dom libvirt.VirDomain, p plugin.MetricType) (plugin.MetricType, error) {
 	cpure := regexp.MustCompile(`^/libvirt/.*/cpu/.*`)
 	memre := regexp.MustCompile(`^/libvirt/.*/mem/.*`)
 	netre := regexp.MustCompile(`^/libvirt/.*/net/.*`)
@@ -144,23 +141,23 @@ func processMetric(ns string, dom libvirt.VirDomain, p plugin.PluginMetricType) 
 
 	switch {
 	case memre.MatchString(ns):
-		metric, err := memStat(p.Namespace(), dom)
+		metric, err := memStat(p.Namespace().Strings(), dom)
 		return *metric, err
 
 	case cpure.MatchString(ns):
-		metric, err := cpuTimes(p.Namespace(), dom)
+		metric, err := cpuTimes(p.Namespace().Strings(), dom)
 		return *metric, err
 
 	case netre.MatchString(ns):
-		metric, err := interfaceStat(p.Namespace(), dom)
+		metric, err := interfaceStat(p.Namespace().Strings(), dom)
 		return *metric, err
 
 	case diskre.MatchString(ns):
-		metric, err := diskStat(p.Namespace(), dom)
+		metric, err := diskStat(p.Namespace().Strings(), dom)
 		return *metric, err
 
 	}
-	return plugin.PluginMetricType{}, fmt.Errorf("Failed to process metric, unknown type %s", ns)
+	return plugin.MetricType{}, fmt.Errorf("Failed to process metric, unknown type %s", ns)
 }
 
 // GetConfigPolicy returns a config policy
@@ -179,22 +176,22 @@ func (p *Libvirt) GetConfigPolicy() (*cpolicy.ConfigPolicy, error) {
 }
 
 // GetMetricTypes returns metric types that can be collected
-func (p *Libvirt) GetMetricTypes(cfg plugin.PluginConfigType) ([]plugin.PluginMetricType, error) {
+func (p *Libvirt) GetMetricTypes(cfg plugin.ConfigType) ([]plugin.MetricType, error) {
 
 	conn, err := libvirt.NewVirConnection(getHypervisorURI(cfg.Table()))
+	defer conn.CloseConnection()
 
 	if err != nil {
 		handleErr(err)
 	}
 
-	var metrics []plugin.PluginMetricType
+	var metrics []plugin.MetricType
 
 	domains, err := conn.ListDomains()
 	if err != nil {
 		handleErr(err)
 	}
 
-	defer conn.CloseConnection()
 	for j := 0; j < domainCount(domains); j++ {
 		dom, err := conn.LookupDomainById(domains[j])
 		if err != nil {
@@ -224,10 +221,10 @@ func (p *Libvirt) GetMetricTypes(cfg plugin.PluginConfigType) ([]plugin.PluginMe
 		metrics = append(metrics, diskMts...)
 	}
 	for _, metric := range cpuMetricsTypes {
-		metrics = append(metrics, plugin.PluginMetricType{Namespace_: []string{"libvirt", "*", "cpu", metric}})
+		metrics = append(metrics, plugin.MetricType{Namespace_: core.NewNamespace("libvirt", "*", "cpu", metric)})
 	}
 	for _, metric := range memoryMetricsTypes {
-		metrics = append(metrics, plugin.PluginMetricType{Namespace_: []string{"libvirt", "*", "mem", metric}})
+		metrics = append(metrics, plugin.MetricType{Namespace_: core.NewNamespace("libvirt", "*", "mem", metric)})
 	}
 	return metrics, nil
 }
