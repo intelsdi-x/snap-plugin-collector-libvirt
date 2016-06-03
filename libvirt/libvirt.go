@@ -71,6 +71,15 @@ func addTags(hostname string, domainname string) map[string]string {
 
 }
 
+func metricReported(mts []plugin.MetricType, ns string) bool {
+	for _, mt := range mts {
+		if mt.Namespace().String() == ns {
+			return true
+		}
+	}
+	return false
+}
+
 // CollectMetrics returns collected metrics
 func (p *Libvirt) CollectMetrics(mts []plugin.MetricType) ([]plugin.MetricType, error) {
 	metrics := []plugin.MetricType{}
@@ -83,8 +92,8 @@ func (p *Libvirt) CollectMetrics(mts []plugin.MetricType) ([]plugin.MetricType, 
 
 	for _, p := range mts {
 
-		ns := p.Namespace().String()
-		if string(p.Namespace().Strings()[1]) == "*" {
+		ns := p.Namespace()
+		if ns.Strings()[1] == "*" {
 			domains, err := conn.ListDomains()
 			if err != nil {
 				return metrics, err
@@ -95,10 +104,34 @@ func (p *Libvirt) CollectMetrics(mts []plugin.MetricType) ([]plugin.MetricType, 
 					return metrics, err
 				}
 				defer dom.Free()
-				metric, err := processMetric(ns, dom, p)
+				metric, err := processMetric(ns.String(), dom, p)
 				if err != nil {
 					return metrics, err
 				}
+				if metricReported(metrics, metric.Namespace().String()) == false {
+					hostname, err := conn.GetHostname()
+					if err != nil {
+						return metrics, err
+					}
+					domainname := p.Namespace()[1]
+					metric.Tags_ = addTags(hostname, domainname.Value)
+					metrics = append(metrics, metric)
+				}
+
+			}
+		} else {
+
+			if metricReported(metrics, p.Namespace().String()) == false {
+				domainName, err := namespacetoDomain(p.Namespace().Strings())
+				if err != nil {
+					return nil, err
+				}
+				dom, err := conn.LookupDomainByName(domainName)
+				if err != nil {
+					return nil, err
+				}
+				defer dom.Free()
+				metric, err := processMetric(ns.String(), dom, p)
 				hostname, err := conn.GetHostname()
 				if err != nil {
 					return metrics, err
@@ -106,27 +139,7 @@ func (p *Libvirt) CollectMetrics(mts []plugin.MetricType) ([]plugin.MetricType, 
 				domainname := p.Namespace()[1]
 				metric.Tags_ = addTags(hostname, domainname.Value)
 				metrics = append(metrics, metric)
-
 			}
-		} else {
-
-			domainName, err := namespacetoDomain(p.Namespace().Strings())
-			if err != nil {
-				return nil, err
-			}
-			dom, err := conn.LookupDomainByName(domainName)
-			if err != nil {
-				return nil, err
-			}
-			defer dom.Free()
-			metric, err := processMetric(ns, dom, p)
-			hostname, err := conn.GetHostname()
-			if err != nil {
-				return metrics, err
-			}
-			domainname := p.Namespace()[1]
-			metric.Tags_ = addTags(hostname, domainname.Value)
-			metrics = append(metrics, metric)
 		}
 
 	}

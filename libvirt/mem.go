@@ -196,7 +196,6 @@ func parseMemStats(memstat []libvirt.VirDomainMemoryStat, nr int32) uint64 {
 
 	var metric uint64
 	for i := 0; i < len(memstat); i++ {
-		fmt.Println(i, memstat[i].Tag, memstat[i].Val)
 		if memstat[i].Tag == nr {
 			return memstat[i].Val
 		}
