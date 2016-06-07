@@ -211,6 +211,24 @@ func TestLibirtPlugin(t *testing.T) {
 			So(collect[0].Data_, ShouldHaveSameTypeAs, expectedType)
 			So(len(collect), ShouldResemble, 1)
 		})
+		Convey("So should return only one metric", func() {
+			metrics := []plugin.MetricType{
+				{
+					Namespace_: core.NewNamespace("libvirt", "test", "cpu", "cputime"),
+					Config_:    cfgNode,
+				},
+				{
+					Namespace_: core.NewNamespace("libvirt", "*", "cpu", "cputime"),
+					Config_:    cfgNode,
+				},
+			}
+			collect, err := libvirtCol.CollectMetrics(metrics)
+			So(err, ShouldBeNil)
+			So(collect[0].Data_, ShouldNotBeNil)
+			var expectedType uint64
+			So(collect[0].Data_, ShouldHaveSameTypeAs, expectedType)
+			So(len(collect), ShouldResemble, 1)
+		})
 
 	})
 }
