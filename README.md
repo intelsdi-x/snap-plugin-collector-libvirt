@@ -99,5 +99,6 @@ This is Open Source software released under the Apache 2.0 License. Please see t
 
 * Author: [Marcin Spoczynski](https://github.com/sandlbn/)
 
+This software has been contributed by MIKELANGELO, a Horizon 2020 project co-funded by the European Union. https://www.mikelangelo-project.eu/
 ## Thank You
 And **thank you!** Your contribution, through code and participation, is incredibly important to us.
