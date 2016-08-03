@@ -26,7 +26,6 @@ import (
 
 	"github.com/intelsdi-x/snap/control/plugin"
 	"github.com/intelsdi-x/snap/control/plugin/cpolicy"
-	"github.com/intelsdi-x/snap/core"
 	"github.com/intelsdi-x/snap/core/ctypes"
 	"github.com/sandlbn/libvirt-go"
 )
@@ -232,12 +231,6 @@ func (p *Libvirt) GetMetricTypes(cfg plugin.ConfigType) ([]plugin.MetricType, er
 			handleErr(err)
 		}
 		metrics = append(metrics, diskMts...)
-	}
-	for _, metric := range cpuMetricsTypes {
-		metrics = append(metrics, plugin.MetricType{Namespace_: core.NewNamespace("libvirt", "*", "cpu", metric)})
-	}
-	for _, metric := range memoryMetricsTypes {
-		metrics = append(metrics, plugin.MetricType{Namespace_: core.NewNamespace("libvirt", "*", "mem", metric)})
 	}
 	return metrics, nil
 }
