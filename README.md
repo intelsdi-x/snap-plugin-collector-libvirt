@@ -25,6 +25,10 @@ Linux/*BSD system with libvirt installed
 
 #### Install libvirt and libvirt-dev package
 
+For MacOS
+```
+brew install libvirt
+```
 For Ubuntu > 14.04
 ```
 apt-get install libvirt-bin libvirt-dev
