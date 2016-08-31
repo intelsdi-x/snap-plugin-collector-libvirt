@@ -35,7 +35,7 @@ const (
 	// Name of plugin
 	Name = "libvirt"
 	// Version of plugin
-	Version = 7
+	Version = 8
 	// Type of plugin
 	Type = plugin.CollectorPluginType
 )
@@ -234,10 +234,16 @@ func (p *Libvirt) GetMetricTypes(cfg plugin.ConfigType) ([]plugin.MetricType, er
 		metrics = append(metrics, diskMts...)
 	}
 	for _, metric := range cpuMetricsTypes {
-		metrics = append(metrics, plugin.MetricType{Namespace_: core.NewNamespace("libvirt", "*", "cpu", metric)})
+		metrics = append(
+			metrics,
+			plugin.MetricType{Namespace_: core.NewNamespace("libvirt").
+				AddDynamicElement("d", "domainname").
+				AddStaticElements("cpu", metric)})
 	}
 	for _, metric := range memoryMetricsTypes {
-		metrics = append(metrics, plugin.MetricType{Namespace_: core.NewNamespace("libvirt", "*", "mem", metric)})
+		metrics = append(metrics, plugin.MetricType{Namespace_: core.NewNamespace("libvirt").
+			AddDynamicElement("d", "domainname").
+			AddStaticElements("mem", metric)})
 	}
 	return metrics, nil
 }

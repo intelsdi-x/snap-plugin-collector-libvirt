@@ -35,6 +35,8 @@ func TestLibirtPluginCpu(t *testing.T) {
 		namespace := []string{"libvirt", "test", "cpu", "cputime"}
 		namespace2 := []string{"libvirt", "test", "cpu", "vcpu", "0", "cputime"}
 		namespace3 := []string{"libvirt", "test", "cpu", "0", "cputime", "bad"}
+		namespace4 := []string{"libvirt", "*", "cpu", "cputime"}
+
 		dom, err := conn.LookupDomainByName("test")
 		metric, err := cpuTimes(namespace, dom)
 		So(err, ShouldBeNil)
@@ -45,7 +47,9 @@ func TestLibirtPluginCpu(t *testing.T) {
 		metric, err = cpuTimes(namespace3, dom)
 		So(metric, ShouldBeNil)
 		So(err.Error(), ShouldStartWith, "Unknown error processing")
-
+		metric, err = cpuTimes(namespace4, dom)
+		So(err, ShouldBeNil)
+		So(metric.Data_, ShouldNotBeNil)
 	})
 	Convey("Get cpu metrics types", t, func() {
 		conn, _ := libvirt.NewVirConnection("test:///default")
