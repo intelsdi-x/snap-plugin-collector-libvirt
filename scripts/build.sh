@@ -28,7 +28,8 @@ echo
 echo "****  Snap Plugin Build  ****"
 echo
 
-# Disable CGO for builds
+# Enable CGO for builds
+
 export CGO_ENABLED=1
 
 # Clean build bin dir
