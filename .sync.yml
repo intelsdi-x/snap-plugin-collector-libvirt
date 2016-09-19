@@ -1,0 +1,20 @@
+.travis.yml:
+  sudo: true
+  dist: trusty
+  addons:
+    apt:
+      packages:
+        - libvirt-bin
+        - libvirt-dev
+  deploy:
+    access_key_id: AKIAINMB43VSSPFZISAA
+    secret_access_key:
+      secure: RJR915t6OO3m/Gk1eMok3nB2J4xsNohNQxNc3sOGJ6KtcEn0MdRxzhXSklcMaA5U6RfQzQ6X58PKmj2rKenYK9yrboM3Ms7O+9wIpxgS/tLVrow/oCeHFjbgSuNZUgJoL2LX9FjtnlBXvV6RDnBJC2XXkzEgjsyRioFN+sk0jaDUAepZPKqKHTPXH/OVXUwPRwaBcL3824wejocEMVemfLP92fpbNXd1Hiq6y3R8E8js6r1gTqKpdjoPgCkIw1EYgo+bAPGQQFx1M+0OMKHMexeTWcXBO4hrZ1LuDrqA4suaT42ikelwdNgWxgUc2kgIJx42DTW+4JwPxr9wfWy+Ozgyy8o0vy0tdQWSXtY4atSAO613pNM3hciRi4CCte6J7QFzzrUzyijK4vvis3ZFIMessFoU4tb78//JomJ3G/Tu8XVpjhJoE1HmlEngyTCgO7mswQcTEuArOg17sLY1T7xPY9rwB4SVrhLfeymDL7saJclN65qcUresHBxQOXQaKPfR7g3YpKd0SjNflZAYBxnBsYwHPjmaaWxHBpiZSJ3e/4fOW/I9KpUi8ByesDFOTyJKyZdatX4A8HfWHwc0Eu3Ce9Wk7GQqshA1scZA/vywcTpEaYQD8jnW4mfqHnT6kQAzUntqzBtRMyxsFJ5ZkeSDliNXidVqWJvXGUk7Ygk=
+    api_key:
+      secure: EkgF7P/f0/OIfaw3XvA7I1nEuA8/ia/Tm0Yy+NYZQaioGIsGRxhCJ4OLJutwHOMxWZj6A4Yz9gvpcMh3lI6i0ZOxb2eFFU4MbNhAPm8qPjSD4sWmxt5DFojx5t53cvcb8WvE72LooceY9P1k58DsonMhB5Nz+DYR+ubZUD6tdYEE9UKEqepR9GCAEg6OZ773kRdmCXMz0jXxsZ7ki8eiQ5HqdFQq/3yPxA+hbn5NWaurcvdMiBAq6mCJVgoVeLWMmIQCvMEA33VING5h/kIfelpFEYX+kBEOzIk2S61YBSpu3DGLRBfock3A3wOGEAgXrpfSH220djqaO99P9ck7vh08Zxfc/PhIuCgRpVff7Ss+T/3DuG1aXGqzX70vth/sAqEF+jU8DPv4xFt27zUbqbxJkJbbeeRQI9o424k88r8sjKTdVNOqHDguwCGRHds0BMK4gR0/Nm/EJudqfM13eiX6TtjAfCfwTgc6emhAdgB1D5CncjzOuI/9BrH/wd07+5Aojaist1V2OwA9rw3Bm2FoPZ4qo2+UvN9UZQtLYtH8IBuqucTTSh4RKVPPLZ03wjDg+QqVFZvbxbG4biXCFZPmT2R809EVUacTqNcCjZfwEQvpf9aLLRiALrdcKREPSZx2IylicLzXy02vQEGBZetLK9Cot6xfZaWzg+aCExE=
+scripts/build.sh:
+  cgo_enabled: true
+scripts/deps.sh:
+  packages:
+    - github.com/smartystreets/goconvey # NOTE: this should be moved to godep/glide
+    - github.com/stretchr/testify/mock

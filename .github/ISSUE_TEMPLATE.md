@@ -1,49 +1,34 @@
-<!--- Verify first that your issue/request is not already reported in GitHub -->
+<!--
+Thanks for filing an issue! Before hitting the button, give this a read.
 
-##### ISSUE TYPE
-<!--- Pick one below and delete the rest: -->
- - Bug Report
- - Feature Idea
- - Documentation Report
+If you are reporting a new issue, make sure that we do not have any duplicates already open. You can ensure this by searching the issue list for this repository. If there is a duplicate, please close your issue and add a comment to the existing issue instead.
 
+If you suspect your issue is a bug, please add as much context as you can using the template below. If it is not a bug, remove any sections you don't need and explain how we can help.
 
-##### SNAP VERSION
-```
-<!--- Paste verbatim output from “snapd --version” between quotes -->
-```
-##### SNAP PLUGIN VERSION
-```
-<!--- Paste verbatim output from “snapctl plugin list” between quotes -->
-```
-
-##### CONFIGURATION
-<!---
-Mention any settings you have changed/added/removed in task description or snapd configuration
+As a basic rule, if you cannot provide enough information to continue addressing the issue within 7 days, a maintainer will close it. We will, however, reopen it if you later provide the information. Thanks again.
 -->
 
-##### OS / ENVIRONMENT
-<!---
-Mention the OS you are running snap / for plugin libvirt version
--->
+**Snap version** (use `snapctl -v`):
 
-##### SUMMARY
-<!--- Explain the problem briefly -->
+**Environment**:
+- **Cloud provider or hardware configuration**:
+- **OS** (e.g. from /etc/os-release):
+- **Kernel** (e.g. `uname -a`):
+- **Relevant tools** (e.g. plugins used with Snap):
+- **Others** (e.g. deploying with Ansible):
 
-##### STEPS TO REPRODUCE
-<!---
-For bugs, show exactly how to reproduce the problem.
-For new features, show how the feature would be used.
--->
 
-<!--- You can also paste gist.github.com links for larger files -->
+**What happened**:
 
-##### EXPECTED RESULTS
-<!--- What did you expect to happen when running the steps above? -->
 
-##### ACTUAL RESULTS
-<!--- What actually happened? If possible run snapd with debug log -->
+**What you expected to happen**:
 
-```
-<!--- Paste verbatim command output between quotes -->
-```
-@intelsdi-x/plugin-maintainers
+
+**Steps to reproduce it** (as minimally and precisely as possible):
+
+1. 
+2. 
+3. 
+
+
+**Anything else do we need to know** (e.g. issue happens only occasionally):
