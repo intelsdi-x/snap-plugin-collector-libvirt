@@ -189,6 +189,8 @@ func TestLibirtPlugin(t *testing.T) {
 		libvirtCol := &Libvirt{}
 		cfgNode := cdata.NewNode()
 		cfgNode.AddItem("uri", ctypes.ConfigValueStr{Value: "test:///default"})
+		cfgNode.AddItem("nova", ctypes.ConfigValueBool{Value: false})
+
 		Convey("So should get cpu metrics", func() {
 			metrics := []plugin.MetricType{{
 				Namespace_: core.NewNamespace("libvirt", "test", "cpu", "vcpu", "0", "cputime"),

@@ -39,7 +39,8 @@ func TestLibirtPluginNet(t *testing.T) {
 		domXMLStr := string(buf)
 		domXML := etree.NewDocument()
 		domXML.ReadFromString(domXMLStr)
-		data := listInterfaces(domXML)
+		lXML := libvirtXML{domain: domXML}
+		data := lXML.GetNics()
 		So(data, ShouldResemble, []string{"tap88709cbd-90"})
 
 	})
@@ -51,7 +52,8 @@ func TestLibirtPluginNet(t *testing.T) {
 		domXMLStr := string(buf)
 		domXML := etree.NewDocument()
 		domXML.ReadFromString(domXMLStr)
-		data := listInterfaces(domXML)
+		lXML := libvirtXML{domain: domXML}
+		data := lXML.GetNics()
 		So(data, ShouldResemble, []string{})
 
 	})
