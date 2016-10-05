@@ -13,9 +13,8 @@
                 "/libvirt/fedora22/mem/max": {}
             },
             "config": {
-                "/intel/dummy": {
-                    "user": "root",
-                    "password": "secret"
+                "/libvirt/fedora22": {
+                    "nova": true
                 }
             },
             "process": [

@@ -24,7 +24,6 @@ import (
 	"regexp"
 	"time"
 
-	"github.com/beevik/etree"
 	"github.com/intelsdi-x/snap/control/plugin"
 	"github.com/intelsdi-x/snap/core"
 	"github.com/sandlbn/libvirt-go"
@@ -127,26 +126,13 @@ func interfaceStat(ns []string, dom libvirt.VirDomain) (*plugin.MetricType, erro
 	return nil, fmt.Errorf("Unknown error processing %v", ns)
 }
 
-func listInterfaces(domXML *etree.Document) []string {
-	networkInterfaces := []string{}
-	for _, t := range domXML.FindElements("//domain/devices/interface/target") {
-		for _, i := range t.Attr {
-			networkInterfaces = append(networkInterfaces, i.Value)
-		}
-
-	}
-	return networkInterfaces
-}
-
 func getNetMetricTypes(dom libvirt.VirDomain) ([]plugin.MetricType, error) {
 	var mts []plugin.MetricType
-	domXMLDesc, err := dom.GetXMLDesc(0)
+	domXML, err := getDomainXML(dom)
 	if err != nil {
 		return nil, err
 	}
-	domXML := etree.NewDocument()
-	domXML.ReadFromString(domXMLDesc)
-
+	lXML := libvirtXML{domain: domXML}
 	domainname, err := dom.GetName()
 	if err != nil {
 		return nil, err
@@ -154,7 +140,7 @@ func getNetMetricTypes(dom libvirt.VirDomain) ([]plugin.MetricType, error) {
 
 	for _, metric := range netMetricsTypes {
 
-		for _, netInterface := range listInterfaces(domXML) {
+		for _, netInterface := range lXML.GetNics() {
 			mts = append(mts, plugin.MetricType{Namespace_: core.NewNamespace("libvirt", domainname, "net", netInterface, metric)})
 
 		}

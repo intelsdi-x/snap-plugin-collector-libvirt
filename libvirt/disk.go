@@ -24,7 +24,6 @@ import (
 	"regexp"
 	"time"
 
-	"github.com/beevik/etree"
 	"github.com/intelsdi-x/snap/control/plugin"
 	"github.com/intelsdi-x/snap/core"
 	"github.com/sandlbn/libvirt-go"
@@ -82,36 +81,22 @@ func diskStat(ns []string, dom libvirt.VirDomain) (*plugin.MetricType, error) {
 	return nil, fmt.Errorf("Unknown error processing %v", ns)
 }
 
-func listDisks(domXML *etree.Document) []string {
-	disks := []string{}
-	for _, t := range domXML.FindElements("//domain/devices/disk[@device='disk']/target") {
-		for _, i := range t.Attr {
-			if i.Key == "dev" {
-				disks = append(disks, i.Value)
-			}
-		}
-	}
-	return disks
-}
-
 func getDiskMetricTypes(dom libvirt.VirDomain) ([]plugin.MetricType, error) {
 	var mts []plugin.MetricType
-	domXMLDesc, err := dom.GetXMLDesc(0)
+	domXML, err := getDomainXML(dom)
 	if err != nil {
 		return nil, err
 	}
-
-	domXML := etree.NewDocument()
-	domXML.ReadFromString(domXMLDesc)
 
 	domainname, err := dom.GetName()
 	if err != nil {
 		return nil, err
 	}
+	lXML := libvirtXML{domain: domXML}
 
 	for _, metric := range diskMetricsTypes {
 
-		for _, disk := range listDisks(domXML) {
+		for _, disk := range lXML.GetDisks() {
 			mts = append(mts, plugin.MetricType{Namespace_: core.NewNamespace("libvirt", domainname, "disk", disk, metric)})
 
 		}

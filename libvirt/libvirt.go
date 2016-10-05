@@ -35,7 +35,7 @@ const (
 	// Name of plugin
 	Name = "libvirt"
 	// Version of plugin
-	Version = 8
+	Version = 9
 	// Type of plugin
 	Type = plugin.CollectorPluginType
 )
@@ -62,13 +62,22 @@ func joinNamespace(ns []string) string {
 	return "/" + strings.Join(ns, "/")
 }
 
-func addTags(hostname string, domainname string) map[string]string {
+func addTags(dom libvirt.VirDomain) (map[string]string, error) {
 	var tags map[string]string
-	tags = make(map[string]string)
-	tags["hostname"] = hostname
-	tags["domainame"] = domainname
-	return tags
+	domXMLDesc, err := getDomainXML(dom)
+	if err != nil {
+		return nil, err
+	}
 
+	lXML := libvirtXML{domain: domXMLDesc}
+	tags = lXML.GetNovaFlavor()
+	tags["uuid"], err = lXML.GetUUID()
+	if err != nil {
+		return nil, err
+	}
+	tags["nova_name"] = lXML.GetNovaName()
+
+	return tags, nil
 }
 
 func metricReported(mts []plugin.MetricType, ns string) bool {
@@ -84,6 +93,7 @@ func metricReported(mts []plugin.MetricType, ns string) bool {
 func (p *Libvirt) CollectMetrics(mts []plugin.MetricType) ([]plugin.MetricType, error) {
 	metrics := []plugin.MetricType{}
 	conn, err := libvirt.NewVirConnection(getHypervisorURI(mts[0].Config().Table()))
+	nova := mts[0].Config().Table()["nova"].(ctypes.ConfigValueBool).Value
 
 	if err != nil {
 		return nil, err
@@ -109,12 +119,12 @@ func (p *Libvirt) CollectMetrics(mts []plugin.MetricType) ([]plugin.MetricType, 
 					return metrics, err
 				}
 				if metricReported(metrics, metric.Namespace().String()) == false {
-					hostname, err := conn.GetHostname()
-					if err != nil {
-						return metrics, err
+					if nova {
+						metric.Tags_, err = addTags(dom)
+						if err != nil {
+							return nil, err
+						}
 					}
-					domainname := p.Namespace()[1]
-					metric.Tags_ = addTags(hostname, domainname.Value)
 					metrics = append(metrics, metric)
 				}
 
@@ -132,12 +142,13 @@ func (p *Libvirt) CollectMetrics(mts []plugin.MetricType) ([]plugin.MetricType, 
 				}
 				defer dom.Free()
 				metric, err := processMetric(ns.String(), dom, p)
-				hostname, err := conn.GetHostname()
-				if err != nil {
-					return metrics, err
+				if nova {
+					metric.Tags_, err = addTags(dom)
+					if err != nil {
+						return nil, err
+					}
 				}
-				domainname := p.Namespace()[1]
-				metric.Tags_ = addTags(hostname, domainname.Value)
+
 				metrics = append(metrics, metric)
 			}
 		}
@@ -182,7 +193,10 @@ func (p *Libvirt) GetConfigPolicy() (*cpolicy.ConfigPolicy, error) {
 	handleErr(err)
 	uri.Description = "Libvirt uri"
 	config.Add(uri)
-
+	nova, err := cpolicy.NewBoolRule("nova", false, false)
+	handleErr(err)
+	nova.Description = "Openstack Nova"
+	config.Add(nova)
 	cp.Add([]string{""}, config)
 	return cp, nil
 
