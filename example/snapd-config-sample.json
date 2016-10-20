@@ -1,17 +1,13 @@
 {
-    "control": {
-        "cache_ttl": "5s"
-    },
+  "control": {
     "plugins": {
-        "collector": {
-            "libvirt": {
-                "versions": {
-                    "8": {
-                    "uri": "qemu+tcp://10.1.0.75/system"
-                        
-                    }
-                }
-            }
+      "collector": {
+        "libvirt": {
+          "all": {
+            "uri": "qemu+tcp://100.64.32.10/system"
+          }
         }
+      }
     }
+  }
 }
