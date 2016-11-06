@@ -1,0 +1,39 @@
+
+---
+  version: 1
+  schedule:
+    type: "simple"
+    interval: "1s"
+  max-failures: 10
+  workflow:
+    collect:
+      metrics:
+         /intel/libvirt/*/cpu/cputime: {}
+         /intel/libvirt/*/disk/*/rdbytes: {}
+         /intel/libvirt/*/disk/*/rdreq: {}
+         /intel/libvirt/*/disk/*/wrbytes: {}
+         /intel/libvirt/*/disk/*/wrreq: {}
+         /intel/libvirt/*/memory/actual_balloon: {}
+         /intel/libvirt/*/memory/available: {}
+         /intel/libvirt/*/memory/major_fault: {}
+         /intel/libvirt/*/memory/max: {}
+         /intel/libvirt/*/memory/mem: {}
+         /intel/libvirt/*/memory/min_fault: {}
+         /intel/libvirt/*/memory/nr: {}
+         /intel/libvirt/*/memory/rss: {}
+         /intel/libvirt/*/memory/swap_in: {}
+         /intel/libvirt/*/memory/swap_out: {}
+         /intel/libvirt/*/memory/unused: {}
+         /intel/libvirt/*/network/*/rxbytes: {}
+         /intel/libvirt/*/network/*/rxdrop: {}
+         /intel/libvirt/*/network/*/rxerrs: {}
+         /intel/libvirt/*/network/*/rxpackets: {}
+         /intel/libvirt/*/network/*/txbytes: {}
+         /intel/libvirt/*/network/*/txdrop: {}
+         /intel/libvirt/*/network/*/txerrs: {}
+         /intel/libvirt/*/network/*/txpackets: {}
+      publish:
+        - plugin_name: "file"
+          config:
+            file: "/tmp/libvirt_metrics.log"
+          

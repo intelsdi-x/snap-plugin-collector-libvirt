@@ -20,18 +20,15 @@ limitations under the License.
 package main
 
 import (
-	"os"
+
 	// Import the snap plugin library
-	"github.com/intelsdi-x/snap/control/plugin"
+	"github.com/intelsdi-x/snap-plugin-lib-go/v1/plugin"
 	// Import our collector plugin implementation
-	"github.com/intelsdi-x/snap-plugin-collector-libvirt/libvirt"
+	"github.com/intelsdi-x/snap-plugin-collector-libvirt/libvirtcollector"
 )
 
 // plugin bootstrap
 func main() {
-	plugin.Start(
-		plugin.NewPluginMeta(libvirt.Name, libvirt.Version, libvirt.Type, []string{}, []string{plugin.SnapGOBContentType}),
-		&libvirt.Libvirt{}, // CollectorPlugin interface
-		os.Args[1],
-	)
+	plugin.StartCollector(libvirtcollector.LibvirtCollector{}, libvirtcollector.Name, libvirtcollector.Version)
+
 }
