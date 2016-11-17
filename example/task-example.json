@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "schedule": {
+    "type": "simple",
+    "interval": "1s"
+  },
+  "workflow": {
+    "collect": {
+      "metrics": {
+        "/libvirt/fedora22/cpu/cputime": {},
+        "/libvirt/fedora22/mem/available": {},
+        "/libvirt/fedora22/mem/rss": {},
+        "/libvirt/fedora22/mem/max": {}
+      },
+      "config": {
+        "/libvirt/fedora22": {
+          "nova": true
+        }
+      },
+      "publish": [
+        {
+          "plugin_name": "file",
+          "config": {
+            "file": "/tmp/published_libvirt"
+          }
+        }
+      ]
+    }
+  }
+}
