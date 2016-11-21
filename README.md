@@ -57,27 +57,27 @@ This plugin has the ability to gather the following metrics:
 
 Namespace | Data Type | Description
 ----------|-----------|-----------------------
-/libvirt/{domain_name}/disk/{device_name}/wrreq| uint64|Write Requests
-/libvirt/{domain_name}/disk/{device_name}/rdreq| uint64|Read Requests
-/libvirt/{domain_name}/disk/{device_name}/wrbytes| uint64|Write Bytes
-/libvirt/{domain_name}/disk/{device_name}/rdbytes| uint64|Read Bytes
-/libvirt/{domain_name}/mem/mem| uint64|Amount of memory specified on domain creation
-/libvirt/{domain_name}/mem/swap_in| uint64|Amount of memory swapped in
-/libvirt/{domain_name}/mem/swap_out| uint64|Amount of memory swapped out
-/libvirt/{domain_name}/mem/major_fault| uint64|Number of major faults
-/libvirt/{domain_name}/mem/minor_fault| uint64|Number of minor faults
-/libvirt/{domain_name}/mem/free| uint64|Total amount of free memory
-/libvirt/{domain_name}/mem/max| uint64|Total amount of memory
-/libvirt/{domain_name}/cpu/cputime| uint64|Cputime ( all vcpus )
-/libvirt/{domain_name}/cpu/vcpu/{vcpu_nr}/cputime| uint64|Cputime for one vcpu
-/libvirt/{domain_name}/net/{interface_name}/rxbytes| uint64|Bytes received
-/libvirt/{domain_name}/net/{interface_name}/rxpackets| uint64|Packets received
-/libvirt/{domain_name}/net/{interface_name}/rxerrs| uint64|Errors on receive
-/libvirt/{domain_name}/net/{interface_name}/rxdrop| uint64|Drops on receive
-/libvirt/{domain_name}/net/{interface_name}/txbytes| uint64|Bytes transmitted
-/libvirt/{domain_name}/net/{interface_name}/txpackets| uint64|Packets transmitted
-/libvirt/{domain_name}/net/{interface_name}/txerrs| uint64|Errors on transmit
-/libvirt/{domain_name}/net/{interface_name}/txdrop| uint64|Drops on transmit
+/intel/libvirt/{domain_name}/disk/{device_name}/wrreq| int64|Write Requests
+/intel/libvirt/{domain_name}/disk/{device_name}/rdreq| int64|Read Requests
+/intel/libvirt/{domain_name}/disk/{device_name}/wrbytes| int64|Write Bytes
+/intel/libvirt/{domain_name}/disk/{device_name}/rdbytes| int64|Read Bytes
+/intel/libvirt/{domain_name}/memory/mem| int64|Amount of memory specified on domain creation
+/intel/libvirt/{domain_name}/memory/swap_in| int64|Amount of memory swapped in
+/intel/libvirt/{domain_name}/memory/swap_out| int64|Amount of memory swapped out
+/intel/libvirt/{domain_name}/memory/major_fault| int64|Number of major faults
+/intel/libvirt/{domain_name}/memory/minor_fault| int64|Number of minor faults
+/intel/libvirt/{domain_name}/memory/free| int64|Total amount of free memory
+/intel/libvirt/{domain_name}/memory/max| int64|Total amount of memory
+/intel/libvirt/{domain_name}/cpu/cputime| int64|Cputime ( all vcpus )
+/intel/libvirt/{domain_name}/cpu/cputime/{vcpu_nr}| int64|Cputime for one vcpu (not supported on qemu without kvm)
+/intel/libvirt/{domain_name}/network/{interface_name}/rxbytes| int64|Bytes received
+/intel/libvirt/{domain_name}/network/{interface_name}/rxpackets| int64|Packets received
+/intel/libvirt/{domain_name}/network/{interface_name}/rxerrs| int64|Errors on receive
+/intel/libvirt/{domain_name}/network/{interface_name}/rxdrop| int64|Drops on receive
+/intel/libvirt/{domain_name}/network/{interface_name}/txbytes| int64|Bytes transmitted
+/intel/libvirt/{domain_name}/network/{interface_name}/txpackets| int64|Packets transmitted
+/intel/libvirt/{domain_name}/network/{interface_name}/txerrs| int64|Errors on transmit
+/intel/libvirt/{domain_name}/network/{interface_name}/txdrop| int64|Drops on transmit
 
 **_IMPORTANT_**: not all hypervisors expose all these metrics. Please check
 your hypervisor or libvirt documentation.

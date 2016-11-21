@@ -1,0 +1,10 @@
+package: github.com/intelsdi-x/snap-plugin-collector-libvirt
+import:
+- package: github.com/intelsdi-x/snap-plugin-lib-go
+  subpackages:
+  - v1/plugin
+- package: github.com/sandlbn/libvirt-go
+testImport:
+- package: github.com/smartystreets/goconvey
+  subpackages:
+  - convey
