@@ -65,53 +65,6 @@ By default the plugin is using qemu:///system uri. To monitor external
 systems, you can pass the uri parameter to the snapd deamon configuration.
 An example configuration file can be found in example directory.
 
-Example of running Snap libvirt collector and writing data to file.
-
-Download an [example Snap global config](example/snapd-config-sample.json) file.
-```
-$ curl -sfLO https://raw.githubusercontent.com/intelsdi-x/snap-plugin-collector-glance/master/example/snapd-config-sample.json
-```
-
-Ensure [Snap daemon is running](https://github.com/intelsdi-x/snap#running-snap) with provided configuration file:
-* command line: `snapd -l 1 -t 0 --config snapd-config-sample.json&`
-
-Download and load Snap plugins:
-```
-$ wget http://snap.ci.snap-telemetry.io/plugins/snap-plugin-collector-libvirt/latest/linux/x86_64/snap-plugin-collector-libvirt
-$ wget http://snap.ci.snap-telemetry.io/plugins/snap-plugin-publisher-file/latest/linux/x86_64/snap-plugin-publisher-file
-$ chmod 755 snap-plugin-*
-$ snapctl plugin load snap-plugin-collector-libvirt
-$ snapctl plugin load snap-plugin-publisher-file
-```
-
-See all available metrics:
-
-```
-$ snapctl metric list
-```
-
-Download an [example task file](example/task-example.json) and load it:
-```
-$ curl -sfLO https://raw.githubusercontent.com/intelsdi-x/snap-plugin-collector-libvirt/master/example/task-example.json
-$ snapctl task create -t task-example.json
-Using task manifest to create task
-Task created
-ID: 02dd7ff4-8106-47e9-8b86-70067cd0a850
-Name: Task-02dd7ff4-8106-47e9-8b86-70067cd0a850
-State: Running
-```
-
-See realtime output from `snapctl task watch <task_id>` (CTRL+C to exit)
-
-This data is published to a file `/tmp/published_libvirt` per task specification
-
-Stop task:
-```
-$ $SNAP_PATH/bin/snapctl task stop 02dd7ff4-8106-47e9-8b86-70067cd0a850
-Task stopped:
-ID: 02dd7ff4-8106-47e9-8b86-70067cd0a850
-```
-
 ### Collected Metrics
 This plugin has the ability to gather the following metrics:
 
