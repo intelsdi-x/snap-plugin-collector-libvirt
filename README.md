@@ -1,6 +1,6 @@
 [![Build Status](https://api.travis-ci.org/intelsdi-x/snap-plugin-collector-libvirt.svg)](https://travis-ci.org/intelsdi-x/snap-plugin-collector-libvirt )
 [![Go Report Card](http://goreportcard.com/badge/intelsdi-x/snap-plugin-collector-libvirt)](http://goreportcard.com/report/intelsdi-x/snap-plugin-collector-libvirt)
-# snap collector plugin - libvirt
+# Snap collector plugin - libvirt
 
 1. [Getting Started](#getting-started)
   * [System Requirements](#system-requirements)
@@ -38,10 +38,24 @@ For Fedora >= 21 / CentOS >= 7 / RedHat >= 7
 yum install libvirt libvirt-devel
 ```
 
-#### Compile plugin
+#### Download the plugin binary:
+
+You can get the pre-built binaries for your OS and architecture from the plugin's [GitHub Releases](https://github.com/intelsdi-x/snap-plugin-collector-libvirt/releases) page. Download the plugin from the latest release and load it into `snapd` (`/opt/snap/plugins` is the default location for Snap packages).
+
+#### To build the plugin binary:
+
+Fork https://github.com/intelsdi-x/snap-plugin-collector-libvirt
+Clone repo into `$GOPATH/src/github.com/intelsdi-x/`:
+
 ```
-make
+$ git clone https://github.com/<yourGithubID>/snap-plugin-collector-libvirt.git
 ```
+
+Build the Snap libvirt plugin by running make within the cloned repo:
+```
+$ make
+```
+This builds the plugin in `./build/`
 
 ## Documentation
 
@@ -50,7 +64,6 @@ make
 By default the plugin is using qemu:///system uri. To monitor external
 systems, you can pass the uri parameter to the snapd deamon configuration.
 An example configuration file can be found in example directory.
-
 
 ### Collected Metrics
 This plugin has the ability to gather the following metrics:
@@ -88,7 +101,9 @@ As we launch this plugin, we do not have any outstanding requirements for the ne
 If you have a feature request, please add it as an [issue](https://github.com/intelsdi-x/snap-plugin-collector-libvirt/issues/new) and/or submit a [pull request](https://github.com/intelsdi-x/snap-plugin-collector-libvirt/pulls).
 
 ## Community Support
-This repository is one of **many** plugins in **snap**, a powerful telemetry framework. See the full project at http://github.com/intelsdi-x/snap To reach out to other users, head to the [main framework](https://github.com/intelsdi-x/snap#community-support)
+This repository is one of **many** plugins in **Snap**, a powerful telemetry framework. See the full project at http://github.com/intelsdi-x/snap.
+
+To reach out to other users, head to the [main framework](https://github.com/intelsdi-x/snap#community-support).
 
 ## Contributing
 We love contributions!
@@ -96,7 +111,7 @@ We love contributions!
 There's more than one way to give back, from examples to blogs to code updates. See our recommended process in [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## License
-[snap](http://github.com/intelsdi-x/snap), along with this plugin, is an Open Source software released under the Apache 2.0 [License](LICENSE).
+[Snap](http://github.com/intelsdi-x/snap), along with this plugin, is an Open Source software released under the Apache 2.0 [License](LICENSE).
 
 ## Acknowledgements
 This is Open Source software released under the Apache 2.0 License. Please see the [LICENSE](LICENSE) file for full license details.
