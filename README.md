@@ -40,7 +40,7 @@ yum install libvirt libvirt-devel
 
 #### Download the plugin binary:
 
-You can get the pre-built binaries for your OS and architecture from the plugin's [GitHub Releases](https://github.com/intelsdi-x/snap-plugin-collector-libvirt/releases) page. Download the plugin from the latest release and load it into `snapd` (`/opt/snap/plugins` is the default location for Snap packages).
+You can get the pre-built binaries for your OS and architecture from the plugin's [GitHub Releases](https://github.com/intelsdi-x/snap-plugin-collector-libvirt/releases) page. Download the plugin from the latest release and load it into `snapteld` (`/opt/snap/plugins` is the default location for Snap packages).
 
 #### To build the plugin binary:
 
@@ -62,7 +62,7 @@ This builds the plugin in `./build/`
 ### Examples
 
 By default the plugin is using qemu:///system uri. To monitor external
-systems, you can pass the uri parameter to the snapd deamon configuration.
+systems, you can pass the uri parameter to the snapteld deamon configuration.
 An example configuration file can be found in example directory.
 
 ### Collected Metrics
