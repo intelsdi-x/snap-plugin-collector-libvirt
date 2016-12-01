@@ -76,6 +76,7 @@ virt-install --name=test_vm --arch=x86_64 --vcpus=1 --ram=512 --os-type=linux --
 ```
 4. Load Snap libvirt collector plugin and create task:
 ```
+wget https://raw.githubusercontent.com/intelsdi-x/snap-plugin-collector-libvirt/master/example/task-example.yaml
 snaptel plugin load snap-plugin-collector-libvirt
 snaptel task create -t task-example.yaml
 ```
