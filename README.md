@@ -61,6 +61,35 @@ This builds the plugin in `./build/`
 
 ### Examples
 
+For quick plugin test using simple VM, you can go through steps below:
+1. Install QEMU and libvirt:
+```
+sudo apt install qemu-kvm libvirt-bin virtinst qemu-system
+```
+2. Download Ubuntu cloud image:
+```
+wget https://cloud-images.ubuntu.com/xenial/current/xenial-server-cloudimg-amd64-disk1.img
+```
+3. Create VM:
+```
+virt-install --name=test_vm --arch=x86_64 --vcpus=1 --ram=512 --os-type=linux --hvm --connect=qemu:///system --network bridge:br0 --disk path=xenial-server-cloudimg-amd64-disk1.img,size=20 --boot hd --accelerate --vnc --noautoconsole --keymap=es
+```
+4. Load Snap libvirt collector plugin and create task:
+```
+snaptel plugin load snap-plugin-collector-libvirt
+snaptel task create -t task-example.yaml
+```
+5. Check task output:
+```
+snaptel task list
+snaptel task watch <Task ID>
+```
+6. Remove test VM:
+```
+virsh destroy test_vm
+virsh undefine test_vm
+```
+
 By default the plugin is using qemu:///system uri. To monitor external
 systems, you can pass the uri parameter to the snapteld deamon configuration.
 An example configuration file can be found in example directory.
