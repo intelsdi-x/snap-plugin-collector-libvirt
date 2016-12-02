@@ -46,7 +46,17 @@ func TestLibirt(t *testing.T) {
 		var lXML Domain
 		domXMLStr := string(buf)
 		xml.Unmarshal([]byte(domXMLStr), &lXML)
-		So(lXML.Devices.Interface.Target.AttrDev, ShouldResemble, "tap88709cbd-90")
+		So(lXML.Devices.Interface[0].Target.AttrDev, ShouldResemble, "tap88709cbd-90")
+	})
+	Convey("Get Interface Name when Multiple Interfaces exist", t, func() {
+		buf, err := ioutil.ReadFile("./test_domain_multiple_interfaces.xml")
+		if err != nil {
+			panic(err)
+		}
+		var lXML Domain
+		domXMLStr := string(buf)
+		xml.Unmarshal([]byte(domXMLStr), &lXML)
+		So(len(lXML.Devices.Interface), ShouldResemble, 3)
 	})
 	Convey("Get Disk Name when disk don't exist", t, func() {
 		conn, err := libvirt.NewVirConnection("test:///default")

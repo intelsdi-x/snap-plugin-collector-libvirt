@@ -75,7 +75,13 @@ func GetDomainInterfaces(domain libvirt.VirDomain) ([]string, error) {
 		errMsg := fmt.Sprintf("Error getting interface info, from domain: %s", domXML.Name)
 		return interfaces, errors.New(errMsg)
 	}
-	interfaces = append(interfaces, domXML.Devices.Interface.Target.AttrDev)
+
+	for _, iface := range domXML.Devices.Interface {
+		if iface.Target != nil {
+			interfaces = append(interfaces, iface.Target.AttrDev)
+		}
+	}
+
 	return interfaces, nil
 }
 

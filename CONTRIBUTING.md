@@ -1,4 +1,4 @@
-# snap plugin collector libvirt
+# Snap plugin collector libvirt
 
 1. [Contributing Code](#contributing-code)
 2. [Contributing Examples](#contributing-examples)
