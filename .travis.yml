@@ -4,7 +4,7 @@ dist: trusty
 language: go
 go:
 - 1.6.3
-- 1.7.1
+- 1.7.3
 addons:
   apt:
     packages:
@@ -48,7 +48,7 @@ deploy:
   on:
     repo: intelsdi-x/snap-plugin-collector-libvirt
     branch: master
-    condition: $TEST_TYPE = "build" && $TRAVIS_GO_VERSION = "1.7.1"
+    condition: $TEST_TYPE = "build" && $TRAVIS_GO_VERSION = "1.7.3"
 - provider: s3
   access_key_id: AKIAINMB43VSSPFZISAA
   secret_access_key:
@@ -62,7 +62,7 @@ deploy:
   on:
     repo: intelsdi-x/snap-plugin-collector-libvirt
     tags: true
-    condition: $TEST_TYPE = "build" && $TRAVIS_GO_VERSION = "1.7.1"
+    condition: $TEST_TYPE = "build" && $TRAVIS_GO_VERSION = "1.7.3"
 - provider: releases
   api_key:
     secure: EkgF7P/f0/OIfaw3XvA7I1nEuA8/ia/Tm0Yy+NYZQaioGIsGRxhCJ4OLJutwHOMxWZj6A4Yz9gvpcMh3lI6i0ZOxb2eFFU4MbNhAPm8qPjSD4sWmxt5DFojx5t53cvcb8WvE72LooceY9P1k58DsonMhB5Nz+DYR+ubZUD6tdYEE9UKEqepR9GCAEg6OZ773kRdmCXMz0jXxsZ7ki8eiQ5HqdFQq/3yPxA+hbn5NWaurcvdMiBAq6mCJVgoVeLWMmIQCvMEA33VING5h/kIfelpFEYX+kBEOzIk2S61YBSpu3DGLRBfock3A3wOGEAgXrpfSH220djqaO99P9ck7vh08Zxfc/PhIuCgRpVff7Ss+T/3DuG1aXGqzX70vth/sAqEF+jU8DPv4xFt27zUbqbxJkJbbeeRQI9o424k88r8sjKTdVNOqHDguwCGRHds0BMK4gR0/Nm/EJudqfM13eiX6TtjAfCfwTgc6emhAdgB1D5CncjzOuI/9BrH/wd07+5Aojaist1V2OwA9rw3Bm2FoPZ4qo2+UvN9UZQtLYtH8IBuqucTTSh4RKVPPLZ03wjDg+QqVFZvbxbG4biXCFZPmT2R809EVUacTqNcCjZfwEQvpf9aLLRiALrdcKREPSZx2IylicLzXy02vQEGBZetLK9Cot6xfZaWzg+aCExE=
@@ -72,4 +72,4 @@ deploy:
   on:
     repo: intelsdi-x/snap-plugin-collector-libvirt
     tags: true
-    condition: $TEST_TYPE = "build" && $TRAVIS_GO_VERSION = "1.7.1"
+    condition: $TEST_TYPE = "build" && $TRAVIS_GO_VERSION = "1.7.3"
