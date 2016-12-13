@@ -105,7 +105,7 @@ type Devices struct {
 	Emulator   *Emulator     `xml:" emulator,omitempty" json:"emulator,omitempty"`
 	Graphics   *Graphics     `xml:" graphics,omitempty" json:"graphics,omitempty"`
 	Input      []*Input      `xml:" input,omitempty" json:"input,omitempty"`
-	Interface  *Interface    `xml:" interface,omitempty" json:"interface,omitempty"`
+	Interface  []*Interface  `xml:" interface,omitempty" json:"interface,omitempty"`
 	Memballoon *Memballoon   `xml:" memballoon,omitempty" json:"memballoon,omitempty"`
 	Serial     []*Serial     `xml:" serial,omitempty" json:"serial,omitempty"`
 	Video      *Video        `xml:" video,omitempty" json:"video,omitempty"`
