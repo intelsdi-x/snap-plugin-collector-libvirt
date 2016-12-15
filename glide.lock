@@ -1,0 +1,55 @@
+hash: fd86791ccb14bc3cfa4b1b74a91acda1c394055817cdb4fb75310c7318cd0b02
+updated: 2016-12-13T13:26:56.229215551+01:00
+imports:
+- name: github.com/intelsdi-x/snap-plugin-lib-go
+  version: 4b5999a62ffb7604f173c1ab3c2205ba8b559624
+  subpackages:
+  - v1/plugin
+  - v1/plugin/rpc
+- name: github.com/golang/protobuf
+  version: 8ee79997227bf9b34611aee7946ae64735e6fd93
+  subpackages:
+  - proto
+- name: github.com/julienschmidt/httprouter
+  version: 5dd70ee059943e81987a817fa1a755b11dd119c1
+- name: github.com/sandlbn/libvirt-go
+  version: bb05a876f4953c4259745d4a266d9aa964ffbb78
+- name: golang.org/x/net
+  version: cfae461cedfdcab6e261a26eb77db53695623303
+  subpackages:
+  - context
+  - http2
+  - http2/hpack
+  - idna
+  - internal/timeseries
+  - lex/httplex
+  - trace
+- name: google.golang.org/grpc
+  version: 0032a855ba5c8a3c8e0d71c2deef354b70af1584
+  subpackages:
+  - codes
+  - credentials
+  - grpclog
+  - internal
+  - metadata
+  - naming
+  - peer
+  - transport
+testImports:
+- name: github.com/gopherjs/gopherjs
+  version: e34a5cd6a1bc7c4fde759f2d3039852fc68b5fcc
+  subpackages:
+  - js
+- name: github.com/jtolds/gls
+  version: 8ddce2a84170772b95dd5d576c48d517b22cac63
+- name: github.com/smartystreets/assertions
+  version: e60cfa771e3f4d18723a4119f1833898c9c62066
+  subpackages:
+  - internal/go-render/render
+  - internal/oglematchers
+- name: github.com/smartystreets/goconvey
+  version: 3c2572876754c4669ae7417b219f0b30a29b32c7
+  subpackages:
+  - convey
+  - convey/gotest
+  - convey/reporting
