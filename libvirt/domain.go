@@ -115,7 +115,7 @@ func GetVCPUStatistics(domain libvirt.VirDomain) (map[string]int64, error) {
 //GetMemoryStatistics returns Libvirt memory statistics
 func GetMemoryStatistics(domain libvirt.VirDomain, tags ...string) (map[string]int64, error) {
 	retValue := make(map[string]int64)
-	info, err := domain.MemoryStats(5, 0)
+	info, err := domain.MemoryStats(9, 0)
 	if err != nil {
 		return retValue, err
 	}

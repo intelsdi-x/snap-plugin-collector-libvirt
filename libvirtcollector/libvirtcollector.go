@@ -33,7 +33,7 @@ const (
 	// Plugin plugin name
 	Plugin = "libvirt"
 	// Version of plugin
-	Version            = 11
+	Version            = 12
 	nsDomainPosition   = 2
 	nsMetricPostion    = 3
 	nsDevicePosition   = 4
