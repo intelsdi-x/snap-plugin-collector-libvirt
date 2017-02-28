@@ -1,0 +1,22 @@
+
+---
+  version: 1
+  schedule:
+    type: "simple"
+    interval: "1s"
+  max-failures: 10
+  workflow:
+    collect:
+      metrics:
+         /intel/libvirt/test/cpu/cputime: {}
+         /intel/libvirt/test/disk/hd0/rdbytes: {}
+         /intel/libvirt/test/disk/hd0/rdreq: {}
+         /intel/libvirt/test/disk/hd0/wrbytes: {}
+         /intel/libvirt/test/disk/hd0/wrreq: {}
+         /intel/libvirt/test/network/vir0/rxbytes: {}
+         /intel/libvirt/test/network/vir0/txbytes: {}
+      publish:
+        - plugin_name: "file"
+          config:
+            file: "/tmp/libvirt_metrics.log"
+          

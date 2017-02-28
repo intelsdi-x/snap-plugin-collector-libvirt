@@ -31,6 +31,8 @@ type Libvirt interface {
 	GetDomainInterfaces(domain libvirt.VirDomain) ([]string, error)
 	GetDomainDisks(domain libvirt.VirDomain) ([]string, error)
 	GetVCPUStatistics(domain libvirt.VirDomain) (map[string]int64, error)
+	GetRequestedInstances(conn libvirt.VirConnection, domainNames []string) ([]libvirt.VirDomain, error)
+	GetInstanceByDomainName(conn libvirt.VirConnection, domainName string) (libvirt.VirDomain, error)
 }
 
 // GetInstanceIds return all names of active VirDomains
@@ -66,4 +68,23 @@ func GetInstances(conn libvirt.VirConnection) ([]libvirt.VirDomain, error) {
 		libvirtDomains = append(libvirtDomains, domain)
 	}
 	return libvirtDomains, nil
+}
+
+// GetRequestedInstances return all instances from domainNames slice
+func GetRequestedInstances(conn libvirt.VirConnection, domainNames []string) ([]libvirt.VirDomain, error) {
+	var libvirtDomains []libvirt.VirDomain
+	for _, domainName := range domainNames {
+		domain, err := GetInstanceByDomainName(conn, domainName)
+		if err != nil {
+			return libvirtDomains, err
+		}
+		libvirtDomains = append(libvirtDomains, domain)
+	}
+	return libvirtDomains, nil
+
+}
+
+// GetInstanceByDomainName return instance by DomainName
+func GetInstanceByDomainName(conn libvirt.VirConnection, domainName string) (libvirt.VirDomain, error) {
+	return conn.LookupDomainByName(domainName)
 }
