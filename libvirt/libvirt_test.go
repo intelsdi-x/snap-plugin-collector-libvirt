@@ -38,6 +38,13 @@ func TestLibirt(t *testing.T) {
 		So(err, ShouldNotBeNil)
 		So(len(interf), ShouldResemble, 0)
 	})
+	Convey("Get DomainNames", t, func() {
+		conn, err := libvirt.NewVirConnection("test:///default")
+		So(err, ShouldBeNil)
+		domains, err := GetInstanceIds(conn)
+		So(err, ShouldBeNil)
+		So(len(domains), ShouldResemble, 1)
+	})
 	Convey("Get Interface Name when Interface exist", t, func() {
 		buf, err := ioutil.ReadFile("./test_domain.xml")
 		if err != nil {
@@ -132,5 +139,21 @@ func TestLibirt(t *testing.T) {
 		data := generateNovaMetadata(&lXML)
 		expectedData := map[string]string{"nova_uuid": "5a26891c-efb0-4c6a-8bef-b54c45296136"}
 		So(data, ShouldResemble, expectedData)
+	})
+	Convey("Get Instances from a slice", t, func() {
+		conn, err := libvirt.NewVirConnection("test:///default")
+		instances := []string{"test"}
+		So(err, ShouldBeNil)
+		domains, err := GetRequestedInstances(conn, instances)
+		So(err, ShouldBeNil)
+		So(len(domains), ShouldResemble, 1)
+	})
+	Convey("Get Instances from a slice, when instance doesn't exist", t, func() {
+		conn, err := libvirt.NewVirConnection("test:///default")
+		instances := []string{"testi1"}
+		So(err, ShouldBeNil)
+		domains, err := GetRequestedInstances(conn, instances)
+		So(err, ShouldNotBeNil)
+		So(len(domains), ShouldResemble, 0)
 	})
 }
