@@ -1,5 +1,5 @@
 <domain type='test' id='34'>
-  <name>instance-00000031</name>
+  <name>instance-00000032</name>
   <uuid>5a26891c-efb0-4c6a-8bef-b54c45296136</uuid>
   <metadata>
     <nova:instance xmlns:nova="http://openstack.org/xmlns/libvirt/nova/1.0">
@@ -8,7 +8,6 @@
       <nova:creationTime>2015-11-05 13:15:50</nova:creationTime>
       <nova:flavor name="m1.small">
         <nova:memory>2048</nova:memory>
-        <nova:disk>20</nova:disk>
         <nova:swap>0</nova:swap>
         <nova:ephemeral>0</nova:ephemeral>
         <nova:vcpus>1</nova:vcpus>
@@ -61,18 +60,6 @@
   <on_crash>destroy</on_crash>
   <devices>
     <emulator>/usr/bin/qemu-system-x86_64</emulator>
-    <disk type='file' device='disk'>
-      <driver name='qemu' type='qcow2' cache='none'/>
-      <source file='/var/lib/nova/instances/5a26891c-efb0-4c6a-8bef-b54c45296136/disk'/>
-      <backingStore type='file' index='1'>
-        <format type='raw'/>
-        <source file='/var/lib/nova/instances/_base/ec273646b7327f7e13f4b7afa1c8c0fa3c4d0cc2'/>
-        <backingStore/>
-      </backingStore>
-      <target dev='vda' bus='virtio'/>
-      <alias name='virtio-disk0'/>
-      <address type='pci' domain='0x0000' bus='0x00' slot='0x04' function='0x0'/>
-    </disk>
     <controller type='usb' index='0'>
       <alias name='usb0'/>
       <address type='pci' domain='0x0000' bus='0x00' slot='0x01' function='0x2'/>

@@ -1,4 +1,4 @@
-<domain type='kvm' id='34'>
+<domain type='test' id='34'>
   <name>instance-00000031</name>
   <uuid>5a26891c-efb0-4c6a-8bef-b54c45296136</uuid>
   <metadata>
@@ -39,7 +39,7 @@
     </system>
   </sysinfo>
   <os>
-    <type arch='x86_64' machine='pc-i440fx-utopic'>hvm</type>
+    <type arch='i686' machine='pc-i440fx-utopic'>hvm</type>
     <boot dev='hd'/>
     <smbios mode='sysinfo'/>
   </os>
