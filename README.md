@@ -108,9 +108,13 @@ Namespace | Data Type | Description
 /intel/libvirt/{domain_name}/memory/swap_in| int64|Amount of memory swapped in
 /intel/libvirt/{domain_name}/memory/swap_out| int64|Amount of memory swapped out
 /intel/libvirt/{domain_name}/memory/major_fault| int64|Number of major faults
-/intel/libvirt/{domain_name}/memory/minor_fault| int64|Number of minor faults
-/intel/libvirt/{domain_name}/memory/free| int64|Total amount of free memory
+/intel/libvirt/{domain_name}/memory/min_fault| int64|Number of minor faults
 /intel/libvirt/{domain_name}/memory/max| int64|Total amount of memory
+/intel/libvirt/{domain_name}/memory/unused| int64| Amount of memory left unused by the system 
+/intel/libvirt/{domain_name}/memory/available| int64| Amount of usable memory
+/intel/libvirt/{domain_name}/memory/actual_balloon| int64| Current balloon value 
+/intel/libvirt/{domain_name}/memory/rss| int64| Resident Set Size of the process running the domain
+/intel/libvirt/{domain_name}/memory/nr| int64| Number of statistics supported by the interface
 /intel/libvirt/{domain_name}/cpu/cputime| int64|Cputime ( all vcpus )
 /intel/libvirt/{domain_name}/cpu/cputime/{vcpu_nr}| int64|Cputime for one vcpu (not supported on qemu without kvm)
 /intel/libvirt/{domain_name}/network/{interface_name}/rxbytes| int64|Bytes received
