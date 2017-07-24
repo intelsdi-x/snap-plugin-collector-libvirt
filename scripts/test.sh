@@ -88,13 +88,7 @@ elif [[ $TEST_TYPE == "medium" ]]; then
     test_unit
   fi
 elif [[ $TEST_TYPE == "large" ]]; then
-  if [[ "${TEST_K8S}" != "0" && -f "$__dir/large_k8s.sh" ]]; then
-    . "${__dir}/large_k8s.sh"
-  elif [[ -f "${__dir}/large_compose.sh" ]]; then
-    . "${__dir}/large_compose.sh"
-  else
-    . "${__dir}/large.sh"
-  fi
+	echo "Error - there are no large tests"
 elif [[ $TEST_TYPE == "build" ]]; then
   "${__dir}/build.sh"
 fi
