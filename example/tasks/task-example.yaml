@@ -31,9 +31,9 @@
          /intel/libvirt/*/network/*/txbytes: {}
          /intel/libvirt/*/network/*/txdrop: {}
          /intel/libvirt/*/network/*/txerrs: {}
-         /intel/libvirt/*/network/*/txpackets: {}
-      publish:
-        - plugin_name: "file"
-          config:
+         /intel/libvirt/*/network/*/txpackets: {}          
+         /intel/libvirt/*/network/*/txpackets: {}          
+         publish:
+            plugin_name: "file"
+         config:
             file: "/tmp/libvirt_metrics.log"
-          
