@@ -17,7 +17,7 @@ env:
   - GLIDE_HOME="${HOME}/.glide"
   matrix:
   - TEST_TYPE=small
-  - TEST_TYPE: build
+  - TEST_TYPE=build
 matrix:
   exclude:
   - go: 1.7.x
