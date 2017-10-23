@@ -53,7 +53,7 @@ imports:
   subpackages:
   - googleapis/rpc/status
 - name: google.golang.org/grpc
-  version: f7bf885db0b7479a537ec317c6e48ce53145f3db
+  version: b8669c35455183da6d5c474ea6e72fbf55183274
   subpackages:
   - balancer
   - codes
