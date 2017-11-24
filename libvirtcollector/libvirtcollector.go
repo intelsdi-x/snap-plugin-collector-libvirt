@@ -143,6 +143,14 @@ func (LibvirtCollector) CollectMetrics(mts []plugin.Metric) ([]plugin.Metric, er
 			}
 
 		}
+
+		if diskCount > 0 {
+			diskCounters, err = wrapper.GetBlockStatistics(id)
+			if err != nil {
+				return metrics, err
+			}
+		}
+
 		for _, mt := range diskMetrics {
 			ns := copyNamespace(mt)
 			if ns[nsDomainPosition].IsDynamic() {
@@ -151,12 +159,7 @@ func (LibvirtCollector) CollectMetrics(mts []plugin.Metric) ([]plugin.Metric, er
 					return metrics, err
 				}
 			}
-			if diskCount > 0 {
-				diskCounters, err = wrapper.GetBlockStatistics(id)
-				if err != nil {
-					return metrics, err
-				}
-			}
+
 			for k, v := range diskCounters {
 				newNamespace := copyNamespaceElements(ns)
 				if newNamespace[nsDevicePosition].IsDynamic() {
