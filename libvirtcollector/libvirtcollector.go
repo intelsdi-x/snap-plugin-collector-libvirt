@@ -93,6 +93,10 @@ func (LibvirtCollector) CollectMetrics(mts []plugin.Metric) ([]plugin.Metric, er
 	var diskCounters map[string]libvirt.VirDomainBlockStats
 
 	for _, id := range ids {
+		curDomainName, err := id.GetName()
+		if err != nil {
+			return metrics, err
+		}
 		if nova {
 			meta, err = wrapper.GetNovaMetadata(id)
 			if err != nil {
@@ -105,10 +109,16 @@ func (LibvirtCollector) CollectMetrics(mts []plugin.Metric) ([]plugin.Metric, er
 				return metrics, err
 			}
 		}
+
 		for _, mt := range netMetrics {
 			ns := copyNamespace(mt)
+
 			if ns[nsDomainPosition].IsDynamic() {
-				ns[nsDomainPosition].Value, err = id.GetName()
+				ns[nsDomainPosition].Value = curDomainName
+			}
+
+			if curDomainName != ns[nsDomainPosition].Value {
+				continue
 			}
 
 			for k, v := range netCounters {
@@ -154,10 +164,11 @@ func (LibvirtCollector) CollectMetrics(mts []plugin.Metric) ([]plugin.Metric, er
 		for _, mt := range diskMetrics {
 			ns := copyNamespace(mt)
 			if ns[nsDomainPosition].IsDynamic() {
-				ns[nsDomainPosition].Value, err = id.GetName()
-				if err != nil {
-					return metrics, err
-				}
+				ns[nsDomainPosition].Value = curDomainName
+			}
+
+			if curDomainName != ns[nsDomainPosition].Value {
+				continue
 			}
 
 			for k, v := range diskCounters {
@@ -187,12 +198,13 @@ func (LibvirtCollector) CollectMetrics(mts []plugin.Metric) ([]plugin.Metric, er
 		for _, mt := range memoryMetrics {
 			ns := copyNamespace(mt)
 			if ns[nsDomainPosition].IsDynamic() {
-				ns[nsDomainPosition].Value, err = id.GetName()
-
-				if err != nil {
-					return metrics, err
-				}
+				ns[nsDomainPosition].Value = curDomainName
 			}
+
+			if curDomainName != ns[nsDomainPosition].Value {
+				continue
+			}
+
 			memKey := ns[nsDevicePosition].Value
 			memoryStat, err := wrapper.GetMemoryStatistics(id, memKey)
 			if err != nil {
@@ -205,11 +217,13 @@ func (LibvirtCollector) CollectMetrics(mts []plugin.Metric) ([]plugin.Metric, er
 		for _, mt := range cpuMetrics {
 			ns := copyNamespace(mt)
 			if ns[nsDomainPosition].IsDynamic() {
-				ns[nsDomainPosition].Value, err = id.GetName()
-				if err != nil {
-					return metrics, err
-				}
+				ns[nsDomainPosition].Value = curDomainName
 			}
+
+			if curDomainName != ns[nsDomainPosition].Value {
+				continue
+			}
+
 			secondlastElement := len(ns) - 2
 			if ns[secondlastElement].IsDynamic() {
 				vcpuTime, err := wrapper.GetVCPUStatistics(id)
@@ -219,7 +233,9 @@ func (LibvirtCollector) CollectMetrics(mts []plugin.Metric) ([]plugin.Metric, er
 				for k, v := range vcpuTime {
 					newNamespace := copyNamespaceElements(ns)
 					newNamespace[secondlastElement].Value = k
-					metrics = append(metrics, createNamespace(mt, v, newNamespace, meta))
+					if !metricStored(metrics, newNamespace) {
+						metrics = append(metrics, createNamespace(mt, v, newNamespace, meta))
+					}
 				}
 			} else {
 				cpuTime, err := wrapper.GetCPUStatistics(id)
